@@ -2,11 +2,12 @@
 #objetivo del messeage analizador es parsear un mensaje sea 
 #en formato de audio, texto, imagenes o algun otro soporte y parsear lo a un comando posible
 #en caso que no se pueda resolver el parseo informar que no se pudo comprender el mensaje
+#analiza la sintaxis de mensaje
+#lo formatea: lo pasa a minuscula, deberia eleminar el resto de caracteres no deseados, y pasarlo a codificacion utf-8
 import re #libreria para las regex
 import constantes as const
 
 def analizarMessage(message):
-	#regex para capturar comandos ^\s*((\w+)\s(\w+)(\s(\w+)\s(\w+)|\s(\w+))?).*$
 	regex = re.compile(const.REGEXCOMMANDS)
 	reCommand = regex.findall(message)
 	#limpio el array de commandos

@@ -4,10 +4,10 @@
 # la idea de cuando llega un comando que analize un objecto con la siguiente estructura
 
 listCommand = {
-	'encender': func_1,
-	'apagar': func_2,
-	'activar': func_3,
-	'desactivar': func_4,
+	'encender': funcOn,
+	'apagar': funcOff,
+	'activar': funcOn,
+	'desactivar': funcOff,
 }
 
 #luego ejecutar la funcion, algo asi
@@ -20,11 +20,21 @@ log.basicConfig(filename='./action.log', filemode='w', level=log.DEBUG)
 
 def acction(command):
 	if command == None:
-		return "comando no valido"	
-	elif listCommand(command[0]) == 'encender':
-		return "encender"
+		return "No se reconoce el commando"	
+	elif command[0] in listCommand.keys(): 
+		return listCommand[command[0]]()
+	else:
+		return "Comando no valido" 
 
-		#if command[0] in listCommand.keys(): 
-		#	listCommand[command[0]]()
-		#else:
-		#	return "No se reconoce el commando" 
+		
+def funcOn():
+	print "estoy en la funcion 1"
+	#logica para comunicarse con la rasp y prender el dispositivo deseado
+	#comparar con el mapa de la casa
+	return "dispositivio encendido"
+
+def funcOff():
+	print "estoy en la funcion 2"
+	#logica para comunicarse con la rasp y apgar el dispositivo deseado
+	#comparar con el mapa de la casa
+	return "dispositivio apagado"
