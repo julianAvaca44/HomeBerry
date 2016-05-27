@@ -1,0 +1,57 @@
+{ 
+	channel_chat_created :  false,  
+	venue :  false,  
+	audio :  false,  
+	contact :  false,  
+	new_chat_title :  false,  
+	forward_date :  false,  
+	new_chat_member :  false,  
+	from_user : { 
+		first_name :  Julian ,  
+		id : 220076678,  
+		last_name :  Avaca ,  
+		username :  false
+		},
+	message_id : 87,
+	group_chat_created :  false,  
+	sticker :  false,  
+	photo :  false,  
+	document :  false,  
+	video :  false,  
+	voice :  false,  
+	pinned_message :  false,  
+	entities : [<telebot.types.MessageEntity object at 0x7f72b25e4ef0>],  
+	date : 1463971317,  
+	left_chat_member :  false,  
+	content_type :  text ,  
+	supergroup_chat_created :  false,  
+	migrate_from_chat_id :  false,  
+	forward_from :  false,  
+	new_chat_photo :  false,  
+	migrate_to_chat_id :  false,  
+	chat : { 
+		first_name :  Julian ,  
+		id : 220076678,  
+		type :  private ,  
+		last_name :  Avaca ,  
+		username :  false,  
+		title :  false
+		},  
+	reply_to_message :  false,  
+	location :  false,  
+	caption :  false,  
+	text :  /help ,  
+	forward_from_chat :  false,  
+	delete_chat_photo :  false
+}
+
+bibliograia:
+
+https://pypi.python.org/pypi/pyTelegramBotAPI/0.3.9
+https://github.com/python-telegram-bot
+http://unmonoqueteclea.es/2016/01/01/creando-nuestro-primer-bot-en-telegram/
+http://www.neositelinux.com.ar/2015/12/02/techcreando-un-bot-para-telegram/
+
+https://docs.python.org/3.4/library/re.html
+https://docs.python.org/3/howto/regex.html
+http://regexr.com/
