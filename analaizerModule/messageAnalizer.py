@@ -13,7 +13,7 @@ def analizarMessage(message):
 	#limpio el array de commandos
 	if (len(reCommand)<1):
 		return None
-	commandList = [elem for elem in reCommand[0] if elem !='']
+	commandList = [elem.lower() for elem in reCommand[0] if elem !='']
 	commandList.pop(0) #elimino los matches padres
 	if (len(commandList)>2):
 		commandList.pop(2) #elimino los matches padres
