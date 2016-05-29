@@ -5,6 +5,7 @@
 	<div>
 		<h3>Como ejecutar</h3>
 		<p>vayan al directorio HomeBerry, y ahi mismo ejecutan sudo python __HomeBerry__.py  (yowsup necesita el sudo)</p>
+                <p>De momento para cerrar todp hay que abrir otro terminal, hacer un 'ps -a' y luego un 'sudo kill xxxx' al proceso python</p> 
 	</div>
 	<div>
 		<p>hay un modulo que se llama constantes.py cuando lo subamos a git ese archivo deberia estar dentro del git ignore por ahi esta definido el TOKEN por las dudas para que no se haga publico por ahora el codigo del TOKEN. En este archivo tiene que tener la configuración de Whatsapp (TELEFONO y PASSWORD)</p>
