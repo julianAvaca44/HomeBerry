@@ -22,7 +22,8 @@ def telegramBotRun():
 
 	@bot.message_handler(commands = ['logo'])
 	def send_logo(message):
-	    bot.send_photo( message.chat.id, open( '../images/raspberry.png', 'rb'))
+	    bot.send_photo( message.chat.id, open( './images/raspberry.png', 'rb'))
+            #print("Archivo")
 
 	@bot.message_handler(commands = ['holamundo'])
 	def send_welcomeWorld(message):
