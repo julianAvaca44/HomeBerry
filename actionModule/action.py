@@ -3,15 +3,7 @@
 #caso de algun fallo comunicar lo
 # la idea de cuando llega un comando que analize un objecto con la siguiente estructura
 
-listCommand = {
-	'encender': funcOn,
-	'apagar': funcOff,
-	'activar': funcOn,
-	'desactivar': funcOff,
-}
 
-#luego ejecutar la funcion, algo asi
-#listCommand.[command]() revisar y buscar la manera lo estoy escribiendo a medida q se me ocurre pero la idea esta jajaj
 
 import logging as log
 #import RPi.GPIO as GPIO
@@ -38,3 +30,13 @@ def funcOff():
 	#logica para comunicarse con la rasp y apgar el dispositivo deseado
 	#comparar con el mapa de la casa
 	return "dispositivio apagado"
+
+listCommand = {
+	'encender': funcOn,
+	'apagar': funcOff,
+	'activar': funcOn,
+	'desactivar': funcOff,
+}
+
+#luego ejecutar la funcion, algo asi
+#listCommand.[command]() revisar y buscar la manera lo estoy escribiendo a medida q se me ocurre pero la idea esta jajaj
