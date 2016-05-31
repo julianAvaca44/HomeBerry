@@ -18,7 +18,13 @@ GPIO.setup(led, GPIO.OUT)
 
 def buttonHandle():
     while True:
-        if GPIO.input(boton_encender) == False:        
+        GPIO.wait_for_edge(boton_encender, GPIO.RISING)
+        state = GPIO.input(led)
+        if(state == True):
+            #print("Estaba encendido")
+            commandList = ["apagar", "luz"]
+        else:
+            #print("Estaba apagado")
             commandList = ["encender", "luz"]
-            actm.acction(commandList)
-	time.sleep(0.5) 
+        actm.acction(commandList)
+        time.sleep(0.5)

@@ -6,6 +6,7 @@ from whatsAppModule import whatsapp as wa
 from buttonModule import button as btn
 import threading
 
+import time
 
 class myThread (threading.Thread):
     def __init__(self, type_process):
@@ -19,10 +20,14 @@ class myThread (threading.Thread):
         elif(self.type == 3):
             btn.buttonHandle()
 
+
+
 def main():
 	#TODO:crear instancias de los bot, cliente, o conexiones de telegram y/o whatsApp
 	#todo crear a telegramBotRun como una clase y ejecutar una instancia de la misma
 	#otro ver como armar otro hilo
+    
+    
         thread1 = myThread(1)
         thread2 = myThread(2)
         thread3 = myThread(3)
@@ -30,6 +35,13 @@ def main():
         thread1.start()
         thread2.start()
         thread3.start()
+    
+
+
+
+    
 
 if __name__ == '__main__':
     main()
+
+    

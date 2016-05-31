@@ -4,26 +4,26 @@ DEBUG:yowsup.env.env:registered env android => <class 'yowsup.env.env_android.An
 DEBUG:yowsup.env.env:registered env s40 => <class 'yowsup.env.env_s40.S40YowsupEnv'>
 DEBUG:yowsup.env.env:Env not set, setting it to s40
 DEBUG:yowsup.env.env:Current env changed to s40 
+INFO:urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
 DEBUG:whatsAppModule.yowsup.stacks.yowstack:Initializing stack
 DEBUG:whatsAppModule.yowsup.stacks.yowstack:Constructed Network Layer
 DEBUG:whatsAppModule.yowsup.stacks.yowstack:Constructed Stanza Regulator Layer
-INFO:urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
 DEBUG:whatsAppModule.yowsup.stacks.yowstack:Constructed Crypt Layer
 DEBUG:whatsAppModule.yowsup.stacks.yowstack:Constructed Coder Layer
 DEBUG:whatsAppModule.yowsup.stacks.yowstack:Constructed Logger Layer
-DEBUG:whatsAppModule.yowsup.stacks.yowstack:Constructed <yowsup.layers.axolotl.layer_control.AxolotlControlLayer object at 0x72ad9230>
-DEBUG:whatsAppModule.yowsup.stacks.yowstack:Constructed Axolotl Layer - <yowsup.layers.axolotl.layer_receive.AxolotlReceivelayer object at 0x72a35c30>
+DEBUG:whatsAppModule.yowsup.stacks.yowstack:Constructed <yowsup.layers.axolotl.layer_control.AxolotlControlLayer object at 0x72b17210>
+DEBUG:whatsAppModule.yowsup.stacks.yowstack:Constructed Axolotl Layer - <yowsup.layers.axolotl.layer_receive.AxolotlReceivelayer object at 0x72b3dd90>
 DEBUG:whatsAppModule.yowsup.stacks.yowstack:Constructed Authentication Layer - Messages Layer - Receipt Layer - Ack Layer - Presence Layer - Ib Layer - Iq Layer - notification Ib Layer - Iq Layer - Chatstate Layer - call Layer - Groups Iq Layer - Media Layer - Privacy Layer - Profiles Layer
 DEBUG:whatsAppModule.yowsup.stacks.yowstack:Constructed Interface Layer
-DEBUG:yowsup.layers.network.layer:Connecting to e2.whatsapp.net:443
+DEBUG:yowsup.layers.network.layer:Connecting to e1.whatsapp.net:443
 DEBUG:yowsup.layers.logger.layer:tx:
 <stream:features>
 </stream:features>
 
 DEBUG:yowsup.layers.logger.layer:tx:
 <auth passive="false" user="5491169368980" mechanism="WAUTH-2">
-2|≥,ƒœõÑÁÄ¨)µå»ù4ìBVgÕsœœVQﬁ¢f‹LDTXañ‚;œZÙ^VVzkdKÃ‹âˇK '¨¬D∏q1ÅsÁ/A
-HEX:327cb32cc4cf9b84e780ac29b58cc89d3493425667cd73cfcf5651dea266dc4c445458610f96e23b12cf5af45e56567a6b644bccdc89ff4b0bca27acc244b8713181730de72f41
+æ w|¶˘§ñ])Ü +¬°>9`árV◊ﬂd€ñSãM≠∑≈rg=π≈¶™T˙I[Ù‚?ÂÂÏ,ÿÂﬂLÖÙò¨SÎdL`ŒÜ
+HEX:beca777ca6f9a4965d2986202bc2a13e396087147256d7df64db96538b4dadb7c5721d673db9f0c5a6aa54fa495b7ff4e2143fe5e5ec2cd8e5df4c85f498ac5311eb644c60ce86
 </auth>
 
 DEBUG:yowsup.layers.logger.layer:rx:
@@ -31,15 +31,15 @@ DEBUG:yowsup.layers.logger.layer:rx:
 </stream:features>
 
 DEBUG:yowsup.layers.logger.layer:rx:
-<success status="active" kind="free" creation="1462631918" expiration="4444444444" props="5" t="1464477555">
-Æ∏èÖÉM|Çm’ ¬"oh+ùf
-HEX:ae07b88f85834d7c826dd520c222086f682b9d66
+<success status="active" kind="free" creation="1462631918" expiration="4444444444" props="5" t="1464660376">
+‚~VÕqô)Y´ñ$B%b≤£µ
+HEX:e20c7e56cd71992959ab049624422562b2a3b503
 </success>
 
 DEBUG:yowsup.layers.protocol_iq.layer:starting ping thread.
 DEBUG:yowsup.layers.logger.layer:rx:
 <ib from="s.whatsapp.net">
-<dirty timestamp="1464477555" type="groups">
+<dirty timestamp="1464660376" type="groups">
 </dirty>
 </ib>
 
@@ -49,20 +49,5 @@ DEBUG:yowsup.layers.logger.layer:rx:
 </offline>
 </ib>
 
-DEBUG:urllib3.connectionpool:"GET /bot232824243:AAGNAqLPieu5SN92PTjGDBzWspdRdp-Slos/getUpdates?timeout=20&offset=1 HTTP/1.1" 200 222
-INFO:urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
-INFO:urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
-DEBUG:urllib3.connectionpool:"POST /bot232824243:AAGNAqLPieu5SN92PTjGDBzWspdRdp-Slos/sendMessage?text=dispositivo+apagado&chat_id=238502754 HTTP/1.1" 200 227
-DEBUG:urllib3.connectionpool:"GET /bot232824243:AAGNAqLPieu5SN92PTjGDBzWspdRdp-Slos/getUpdates?timeout=20&offset=179467862 HTTP/1.1" 200 23
-INFO:urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
-DEBUG:yowsup.layers.protocol_iq.layer:ping queue size: 1
-DEBUG:yowsup.layers.logger.layer:tx:
-<iq xmlns="w:p" type="get" id="1">
-</iq>
-
-DEBUG:yowsup.layers.logger.layer:rx:
-<iq type="result" from="5491169368980@s.whatsapp.net" id="1" t="1464477605">
-</iq>
-
-DEBUG:urllib3.connectionpool:"GET /bot232824243:AAGNAqLPieu5SN92PTjGDBzWspdRdp-Slos/getUpdates?timeout=20&offset=179467862 HTTP/1.1" 200 23
+DEBUG:urllib3.connectionpool:"GET /bot232824243:AAGNAqLPieu5SN92PTjGDBzWspdRdp-Slos/getUpdates?timeout=20&offset=1 HTTP/1.1" 200 23
 INFO:urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
