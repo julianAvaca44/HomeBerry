@@ -12,6 +12,8 @@ class myThread (threading.Thread):
     def __init__(self, type_process):
         threading.Thread.__init__(self)
         self.type = type_process
+        #La siguiente linea hace que cuando se cierre un thread se cierren todos
+        self.daemon = True;
     def run(self):
         if(self.type == 1):
             wa.WhatsAppBot().start()
@@ -23,23 +25,20 @@ class myThread (threading.Thread):
 
 
 def main():
-	#TODO:crear instancias de los bot, cliente, o conexiones de telegram y/o whatsApp
-	#todo crear a telegramBotRun como una clase y ejecutar una instancia de la misma
-	#otro ver como armar otro hilo
-    
-    
-        thread1 = myThread(1)
-        thread2 = myThread(2)
-        thread3 = myThread(3)
-        
-        thread1.start()
-        thread2.start()
-        thread3.start()
-    
+   
+        try:
+            threadWhatsApp = myThread(1)
+            threadTelegram = myThread(2)
+            threadBoton = myThread(3)
+            
+            threadWhatsApp.start()
+            threadTelegram.start()
+            threadBoton.start()
+            while(True): time.sleep(1)
 
+        except KeyboardInterrupt:
+            pass
 
-
-    
 
 if __name__ == '__main__':
     main()

@@ -12,9 +12,11 @@ from actionModule import action as actm
 
 logger = logging.getLogger("yowsup-cli")
 
+
+
 class WhatsAppBot(object):
     def __init__(self, encryptionEnabled = True):
-        credentials = self._getCredentials()
+        credentials = (const.TELEFONO, const.PASSWORD) 
         stackBuilder = YowStackBuilder()
 
         self.stack = stackBuilder\

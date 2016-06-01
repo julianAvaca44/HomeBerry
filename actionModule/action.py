@@ -12,7 +12,7 @@ import logging as log
 import RPi.GPIO as GPIO
 
 #PONER EN CONSTANTES O ALGUN LADO GENERAL
-led = 4
+led_1 = 4
 
 log.basicConfig(filename='./action.log', filemode='w', level=log.DEBUG)
 
@@ -20,24 +20,38 @@ def acction(command):
 	if command == None:
 		return "No se reconoce el commando"	
 	elif command[0] in listCommand.keys(): 
-		return listCommand[command[0]]()
+		return listCommand[command[0]](command)
 	else:
 		return "Comando no valido" 
 
 		
-def funcOn():
-	print("estoy en la funcion 1")
+def funcOn(command):
+        print("estoy en la funcion 1")
+        if(command[1] == "luz"):
+                GPIO.output(led_1, 1)
+                return "Luz encendida"
+        elif(command[1] == "ventilador"):
+                GPIO.output(led_1, 1)
+                return "Ventilador encendido"
+        else:
+                return "Dispositivo inexistente"
 	#logica para comunicarse con la rasp y prender el dispositivo deseado
 	#comparar con el mapa de la casa
-        GPIO.output(led, 1)	
-	return "dispositivo encendido"
+        	
+	
 
-def funcOff():
+def funcOff(command):
 	print("estoy en la funcion 2")
 	#logica para comunicarse con la rasp y apgar el dispositivo deseado
 	#comparar con el mapa de la casa
-	GPIO.output(led, 0)
-	return "dispositivo apagado"
+        if(command[1] == "luz"):
+                GPIO.output(led_1, 0)
+                return "Luz apagada"
+        elif(command[1] == "ventilador"):
+                #GPIO.output(led_1, 0)
+                return "Ventilador apagado"
+        else:
+                return "Dispositivo inexistente"
 
 
 listCommand = {
