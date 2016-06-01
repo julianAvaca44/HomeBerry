@@ -14,13 +14,14 @@ def acction(command):
 	if command == None:
 		return "No se reconoce el commando"	
 	elif command[0] in listCommand.keys(): 
-		return listCommand[command[0]]()
+		return listCommand[command[0]](command)
 	else:
 		return "Comando no valido" 
 
 		
-def funcOn():
-	print "estoy en la funcion 1"
+def funcOn(command):
+	print "estoy en la funcion On"
+	
 	#logica para comunicarse con la rasp y prender el dispositivo deseado
 	#comparar con el mapa de la casa
 	return "dispositivio encendido"
