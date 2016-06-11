@@ -10,9 +10,13 @@
 
 import logging as log
 import RPi.GPIO as GPIO
+import os
 
 #PONER EN CONSTANTES O ALGUN LADO GENERAL
-led_1 = 4
+led = {}
+led[1] = 4
+led[2] = 17
+ventilador = 23
 
 log.basicConfig(filename='./action.log', filemode='w', level=log.DEBUG)
 
@@ -26,12 +30,20 @@ def acction(command):
 
 		
 def funcOn(command):
-        print("estoy en la funcion 1")
+        print("funcOn")
         if(command[1] == "luz"):
-                GPIO.output(led_1, 1)
-                return "Luz encendida"
+                if(len(command)>2 and ( command[2]== "1" or command[2]== "2")):
+                        GPIO.output(led[int(command[2])], 1)
+                        return "Luz " + command[2] +" encendida"
+                else:
+                        return "Dispositivo inexistente"
+        elif(command[1] == "luces"):
+                GPIO.output(led[1], 1)
+                GPIO.output(led[2], 1)
+                return "Luces encendidas"
+                
         elif(command[1] == "ventilador"):
-                GPIO.output(led_1, 1)
+                GPIO.output(ventilador, 1)
                 return "Ventilador encendido"
         else:
                 return "Dispositivo inexistente"
@@ -41,22 +53,66 @@ def funcOn(command):
 	
 
 def funcOff(command):
-	print("estoy en la funcion 2")
+	print("funcOff")
 	#logica para comunicarse con la rasp y apgar el dispositivo deseado
 	#comparar con el mapa de la casa
         if(command[1] == "luz"):
-                GPIO.output(led_1, 0)
-                return "Luz apagada"
+                if(len(command)>2 and ( command[2]== "1" or command[2]== "2")):
+                        GPIO.output(led[int(command[2])], 0)
+                        return "Luz " + command[2] +" apagada"
+                else:
+                        return "Dispositivo inexistente"                
+        elif(command[1] == "luces"):
+                GPIO.output(led[1], 0)
+                GPIO.output(led[2], 0)
+                return "Luces apagadas"
+
         elif(command[1] == "ventilador"):
-                #GPIO.output(led_1, 0)
+                GPIO.output(ventilador, 0)
                 return "Ventilador apagado"
         else:
                 return "Dispositivo inexistente"
+
+def funState(command):
+	print("funState")
+	#logica para comunicarse con la rasp y apgar el dispositivo deseado
+	#comparar con el mapa de la casa
+        if(command[1] == "luz"):
+                if(command[2]== "1" or command[2]== "2"):
+                        state = GPIO.input(led[int(command[2])])
+                        return "Luz " + command[2] + " " + ("encendida" if state else "apagada")
+                else:
+                        return "Dispositivo inexistente"
+        elif(command[1] == "luces"):
+                state = GPIO.input(led[1])
+                respuesta = "Luz 1 " + ("encendida" if state else "apagada")
+                state = GPIO.input(led[2])        
+                return respuesta + " - Luz 2 " + ("encendida" if state else "apagada")
+        elif(command[1] == "ventilador"):
+                state = GPIO.input(ventilador)
+                return "Ventilador " + ("encendido" if state else "apagado")
+        elif(command[1] == "dispositivos"):
+                state = GPIO.input(led[1])
+                respuesta = "Luz 1 " + ("encendida" if state else "apagada")
+                state = GPIO.input(led[2])        
+                respuesta = respuesta + "\nLuz 2 " + ("encendida" if state else "apagada")
+                state = GPIO.input(ventilador)
+                return respuesta + "\nVentilador " + ("encendido" if state else "apagado")
+
+        else:
+                return "Dispositivo inexistente"        
+
+def funPhoto(command):
+        print("funPhoto")
+        os.system('fswebcam -q -r 320x240 -S 3 --no-banner --jpeg 50 --save ./images/photo.jpg') # uses Fswebcam to take picture
+        return "photo"
 
 
 listCommand = {
 	'encender': funcOn,
 	'apagar': funcOff,
 	'activar': funcOn,
-	'desactivar': funcOff
+	'desactivar': funcOff,
+        'estado': funState,
+        'foto': funPhoto
 }

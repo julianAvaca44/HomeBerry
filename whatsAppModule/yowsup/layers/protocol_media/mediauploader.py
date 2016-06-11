@@ -56,7 +56,6 @@ class MediaUploader(WARequest, threading.Thread):
             m = hashlib.md5()
             m.update(filename.encode())
             crypto = m.hexdigest() + os.path.splitext(filename)[1]
-
             boundary = "zzXXzzYYzzXXzzQQ"#"-------" + m.hexdigest() #"zzXXzzYYzzXXzzQQ"
             contentLength = 0
 
@@ -115,12 +114,11 @@ class MediaUploader(WARequest, threading.Thread):
             data += ssl_sock.recv(8192)
             data += ssl_sock.recv(8192)
 
+
             if self.progressCallback:
                 self.progressCallback(self.sourcePath, self.jid, uploadUrl, 100)
 
-
             lines = data.decode().splitlines()
-
 
             result = None
 
@@ -128,7 +126,7 @@ class MediaUploader(WARequest, threading.Thread):
                 if l.startswith("{"):
                     result = self.parser.parse(l, self.pvars)
                     break
-
+                    
             if not result:
                 raise Exception("json data not found")
 
@@ -143,5 +141,6 @@ class MediaUploader(WARequest, threading.Thread):
 
         except:
             logger.exception("Error occured at transfer %s"%sys.exc_info()[1])
+            print("Error occured at transfer %s"%sys.exc_info()[1])
             if self.errorCallback:
                 self.errorCallback(sourcePath, self.jid, uploadUrl)

@@ -48,6 +48,11 @@ def telegramBotRun():
 	    	pass
 	    	#TODO:rechazar mensaje
 	    #envio comando y reenvio respuesta al usuario
-	    bot.send_message(cId, actm.acction(commands))
+            message = actm.acction(commands)
+            if(message == "photo"):
+                bot.send_photo(cId, open( './images/photo.jpg', 'rb'))
+            else:
+                bot.send_message(cId, message)
+           
 	#Peticiones
 	bot.polling(none_stop = True) # Con esto, le decimos al bot que siga funcionando incluso si encuentra algun fallo.

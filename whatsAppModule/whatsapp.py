@@ -10,9 +10,11 @@ import constantes as const
 from analaizerModule import messageAnalizer as am
 from actionModule import action as actm
 
+from yowsup.layers.protocol_media.protocolentities import RequestUploadIqProtocolEntity
+from yowsup.layers.protocol_media.mediauploader import MediaUploader
+from yowsup.layers.protocol_media.protocolentities.message_media_downloadable_image import ImageDownloadableMediaMessageProtocolEntity
+
 logger = logging.getLogger("yowsup-cli")
-
-
 
 class WhatsAppBot(object):
     def __init__(self, encryptionEnabled = True):
@@ -44,16 +46,54 @@ class EchoLayer(YowInterfaceLayer):
  	    	print("WA " + messageProtocolEntity.getFrom(False) + " : " + messageProtocolEntity.getBody())
                 commands = am.analizarMessage(messageProtocolEntity.getBody())
                 print(commands)
-                messageProtocolEntity.setBody(actm.acction(commands))
+                message = actm.acction(commands)
+                if(message == "photo"):
 
-        self.toLower(messageProtocolEntity.forward(messageProtocolEntity.getFrom()))
-        self.toLower(messageProtocolEntity.ack())
+                    self.media_send(messageProtocolEntity.getFrom(False), './images/photo.jpg', RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE)
+                else:
+                    messageProtocolEntity.setBody(message)
+                    self.toLower(messageProtocolEntity.forward(messageProtocolEntity.getFrom()))
+                    self.toLower(messageProtocolEntity.ack())
+
         self.toLower(messageProtocolEntity.ack(True))
-        
     @ProtocolEntityCallback("receipt")
     def onReceipt(self, entity):
         self.toLower(entity.ack())
 
+    def media_send(self, number, path, mediaType, caption = None):
+        jid = self.normalizeJid(number)
+        entity = RequestUploadIqProtocolEntity(mediaType, filePath=path)                                            
+        successFn = lambda successEntity, originalEntity: self.onRequestUploadResult(jid, mediaType, path, successEntity, originalEntity, caption)
+        errorFn = lambda errorEntity, originalEntity: self.onRequestUploadError(jid, path, errorEntity, originalEntity)
+        self._sendIq(entity, successFn, errorFn)
 
+    def normalizeJid(self, number):
+        if '@' in number:
+            return number
+        elif "-" in number:
+            return "%s@g.us" % number
 
-         
+        return "%s@s.whatsapp.net" % number
+
+    def onRequestUploadResult(self, jid, mediaType, filePath, resultRequestUploadIqProtocolEntity, requestUploadIqProtocolEntity, caption = None):
+        if resultRequestUploadIqProtocolEntity.isDuplicate():
+            self.doSendMedia(mediaType, filePath, resultRequestUploadIqProtocolEntity.getUrl(), jid,
+                             resultRequestUploadIqProtocolEntity.getIp(), caption)
+            
+        else:
+            successFn = lambda filePath, jid, url: self.doSendMedia(mediaType, filePath, url, jid, resultRequestUploadIqProtocolEntity.getIp(), caption)
+            mediaUploader = MediaUploader(jid, self.getOwnJid(), filePath,
+                                      resultRequestUploadIqProtocolEntity.getUrl(),
+                                      resultRequestUploadIqProtocolEntity.getResumeOffset(),
+                                      successFn, None, None, async=False)
+            mediaUploader.start()
+
+        
+    def doSendMedia(self, mediaType, filePath, url, to, ip = None, caption = None):
+        if mediaType == RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE:
+        	entity = ImageDownloadableMediaMessageProtocolEntity.fromFilePath(filePath, url, ip, to, caption = caption)
+        elif mediaType == RequestUploadIqProtocolEntity.MEDIA_TYPE_AUDIO:
+        	entity = AudioDownloadableMediaMessageProtocolEntity.fromFilePath(filePath, url, ip, to)
+        elif mediaType == RequestUploadIqProtocolEntity.MEDIA_TYPE_VIDEO:
+        	entity = VideoDownloadableMediaMessageProtocolEntity.fromFilePath(filePath, url, ip, to, caption = caption)
+        self.toLower(entity)
