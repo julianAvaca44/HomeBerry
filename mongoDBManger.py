@@ -10,28 +10,28 @@ startlog = db.startup_log
 startlog.find_one()
 """
 
-from pymongo import Connection
-import constantes.py as const
+from pymongo import MongoClient
+import constantes as const
  
 def mongomanager():
  
- conex = Connection(const.MONGODB)
+ client = MongoClient(const.MONGODB)
  
  def databases():
   print "Control de BD's , Que deseas hacer?"
   entrada = raw_input("- [1]Visualizar BD's | [2]Crear BD's | [3]Borrar BD's | [4]Home -> ")
   if entrada == '1':
-   var = conex.database_names()
+   var = client.database_names()
    print var
    databases()
   elif entrada == '2':
    name = raw_input("Nombre de la BD que quieres crear -> ")
    global db 
-   db = conex.name
+   db = client.name
    databases()
   elif entrada == '3':
    delname = raw_input("Nombre de la BD que quieres eliminar -> ")
-   conex.drop_database(delname)
+   client.drop_database(delname)
    databases()
   elif entrada == '4':
    mongomanager()
@@ -43,7 +43,7 @@ def mongomanager():
   print "Control de Colecciones , que deseas hacer?"
   entrada = raw_input("- [1]Visualizar colecciones | [2]Crear coleccion | [3]Home -> ")
   if entrada == '1':
-   var = db.collection_names()
+   var = client.test.collection_names()
    print var
    collections()
   elif entrada == '2':
@@ -67,7 +67,7 @@ def mongomanager():
    documents()
   elif entrada == '2':
    content = raw_input("Parametros del contenido -> ")
-   var = collectname.find(content)
+   var = client.test.people.find(content)
    print var
    documents()
   elif entrada == '3':
@@ -100,3 +100,9 @@ def mongomanager():
   mongomanager()
  
 mongomanager()
+
+#
+#
+#mongoimport --host localhost:27017 --db test --collection people --type json --file dispositivos-hb-db.json
+#
+#
