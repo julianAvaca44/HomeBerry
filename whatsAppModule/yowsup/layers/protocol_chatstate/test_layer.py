@@ -1,6 +1,6 @@
-from yowsup.layers import YowProtocolLayerTest
-from yowsup.layers.protocol_chatstate import YowChatstateProtocolLayer
-from yowsup.layers.protocol_chatstate.protocolentities import IncomingChatstateProtocolEntity, OutgoingChatstateProtocolEntity
+from whatsAppModule.yowsup.layers import YowProtocolLayerTest
+from whatsAppModule.yowsup.layers.protocol_chatstate import YowChatstateProtocolLayer
+from whatsAppModule.yowsup.layers.protocol_chatstate.protocolentities import IncomingChatstateProtocolEntity, OutgoingChatstateProtocolEntity
 
 class YowChatStateProtocolLayerTest(YowProtocolLayerTest, YowChatstateProtocolLayer):
     def setUp(self):

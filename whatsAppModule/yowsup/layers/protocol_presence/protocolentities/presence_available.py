@@ -1,4 +1,4 @@
-from yowsup.structs import ProtocolEntity, ProtocolTreeNode
+from whatsAppModule.yowsup.structs import ProtocolEntity, ProtocolTreeNode
 from .presence import PresenceProtocolEntity
 class AvailablePresenceProtocolEntity(PresenceProtocolEntity):
     '''

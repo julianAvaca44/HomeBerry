@@ -1,6 +1,6 @@
-from yowsup.structs import ProtocolTreeNode
-from yowsup.layers.protocol_ib.protocolentities.clean_iq import CleanIqProtocolEntity
-from yowsup.layers.protocol_iq.protocolentities.test_iq import IqProtocolEntityTest
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.layers.protocol_ib.protocolentities.clean_iq import CleanIqProtocolEntity
+from whatsAppModule.yowsup.layers.protocol_iq.protocolentities.test_iq import IqProtocolEntityTest
 
 class CleanIqProtocolEntityTest(IqProtocolEntityTest):
     def setUp(self):

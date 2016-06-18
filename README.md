@@ -4,7 +4,7 @@
 <div>
 	<div>
 		<h3>Como ejecutar</h3>
-		<p>vayan al directorio HomeBerry, y ahi mismo ejecutan sudo python __HomeBerry__.py  (yowsup necesita el sudo)</p>
+		<p>vayan al directorio HomeBerry, y ahi mismo ejecutan ./iniciar.sh</p>
                 <p>Ya se puede mandar un ctrl+c y cierra todos los hilos</p> 
 	</div>
 	<div>
@@ -13,15 +13,25 @@
 		<p>bueno y el sabado les cuento y debatimos varias cosas que vimos Javi tmb porque por chat en un quilombo</p>
 		<p>las cosas que hay q discutir son:</p>
 		<ul>
-			<li>version de python</li>
-			<li>libreria de threads</li>
-			<li>audio en whatsApp</li>
 			<li>definicion de comandos</li>
 			<li>definicion de estructura de archivos</li>
 			<li>un poco de la arquitectura: modulo de seguridad y bla bla</li>
-			<li>workShop de git(por las dudas)</li>
-			<li>standar de programacion(MUY IMPORTANTE jejeje solo porq me gusta romper las bolas :P)</li>
 			<li>generacion de un cliente-telegram no el bot</li>
+		</ul>
+                
+                <p>Librerías necesarias</p>
+                <u1>
+                        <li>Para cam:</li>
+			<ul>
+				<li>fswebcam (apt-get)</li>
+			</ul>
+                        <li>Para voz:</li>
+			<ul>
+				<li>opus-tool (pip)</li>
+				<li>wget (pip)</li>
+				<li>SearchRecognition (pip)</li>
+				<li>flac (pip)</li>
+			</ul>
 		</ul>
 	</div>
 </div>

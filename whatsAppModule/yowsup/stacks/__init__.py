@@ -1,24 +1,24 @@
 from .yowstack import YowStack, YowStackBuilder
 
-from yowsup.layers.auth                        import YowCryptLayer, YowAuthenticationProtocolLayer, AuthError
-from yowsup.layers.coder                       import YowCoderLayer
-from yowsup.layers.logger                      import YowLoggerLayer
-from yowsup.layers.network                     import YowNetworkLayer
-from yowsup.layers.protocol_messages           import YowMessagesProtocolLayer
-from yowsup.layers.stanzaregulator             import YowStanzaRegulator
-from yowsup.layers.protocol_media              import YowMediaProtocolLayer
-from yowsup.layers.protocol_acks               import YowAckProtocolLayer
-from yowsup.layers.protocol_receipts           import YowReceiptProtocolLayer
-from yowsup.layers.protocol_groups             import YowGroupsProtocolLayer
-from yowsup.layers.protocol_presence           import YowPresenceProtocolLayer
-from yowsup.layers.protocol_ib                 import YowIbProtocolLayer
-from yowsup.layers.protocol_notifications      import YowNotificationsProtocolLayer
-from yowsup.layers.protocol_iq                 import YowIqProtocolLayer
-from yowsup.layers.protocol_contacts           import YowContactsIqProtocolLayer
-from yowsup.layers.protocol_chatstate          import YowChatstateProtocolLayer
-from yowsup.layers.protocol_privacy            import YowPrivacyProtocolLayer
-from yowsup.layers.protocol_profiles           import YowProfilesProtocolLayer
-from yowsup.layers.protocol_calls              import YowCallsProtocolLayer
+from whatsAppModule.yowsup.layers.auth                        import YowCryptLayer, YowAuthenticationProtocolLayer, AuthError
+from whatsAppModule.yowsup.layers.coder                       import YowCoderLayer
+from whatsAppModule.yowsup.layers.logger                      import YowLoggerLayer
+from whatsAppModule.yowsup.layers.network                     import YowNetworkLayer
+from whatsAppModule.yowsup.layers.protocol_messages           import YowMessagesProtocolLayer
+from whatsAppModule.yowsup.layers.stanzaregulator             import YowStanzaRegulator
+from whatsAppModule.yowsup.layers.protocol_media              import YowMediaProtocolLayer
+from whatsAppModule.yowsup.layers.protocol_acks               import YowAckProtocolLayer
+from whatsAppModule.yowsup.layers.protocol_receipts           import YowReceiptProtocolLayer
+from whatsAppModule.yowsup.layers.protocol_groups             import YowGroupsProtocolLayer
+from whatsAppModule.yowsup.layers.protocol_presence           import YowPresenceProtocolLayer
+from whatsAppModule.yowsup.layers.protocol_ib                 import YowIbProtocolLayer
+from whatsAppModule.yowsup.layers.protocol_notifications      import YowNotificationsProtocolLayer
+from whatsAppModule.yowsup.layers.protocol_iq                 import YowIqProtocolLayer
+from whatsAppModule.yowsup.layers.protocol_contacts           import YowContactsIqProtocolLayer
+from whatsAppModule.yowsup.layers.protocol_chatstate          import YowChatstateProtocolLayer
+from whatsAppModule.yowsup.layers.protocol_privacy            import YowPrivacyProtocolLayer
+from whatsAppModule.yowsup.layers.protocol_profiles           import YowProfilesProtocolLayer
+from whatsAppModule.yowsup.layers.protocol_calls              import YowCallsProtocolLayer
 
 
 

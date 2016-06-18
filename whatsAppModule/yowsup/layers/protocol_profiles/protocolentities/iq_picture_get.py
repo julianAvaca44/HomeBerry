@@ -1,5 +1,5 @@
 from .iq_picture import PictureIqProtocolEntity
-from yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
 class GetPictureIqProtocolEntity(PictureIqProtocolEntity):
     '''
     <iq type="get" id="{{id}}" xmlns="w:profile:picture", to={{jid}}">

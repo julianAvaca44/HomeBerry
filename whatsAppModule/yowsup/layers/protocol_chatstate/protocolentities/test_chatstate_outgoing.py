@@ -1,5 +1,5 @@
-from yowsup.layers.protocol_chatstate.protocolentities.chatstate_outgoing import OutgoingChatstateProtocolEntity
-from yowsup.structs.protocolentity import ProtocolEntityTest
+from whatsAppModule.yowsup.layers.protocol_chatstate.protocolentities.chatstate_outgoing import OutgoingChatstateProtocolEntity
+from whatsAppModule.yowsup.structs.protocolentity import ProtocolEntityTest
 import unittest
 
 entity = OutgoingChatstateProtocolEntity(OutgoingChatstateProtocolEntity.STATE_PAUSED, "jid@s.whatsapp.net")

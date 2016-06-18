@@ -1,4 +1,4 @@
-from yowsup.structs import ProtocolEntity, ProtocolTreeNode
+from whatsAppModule.yowsup.structs import ProtocolEntity, ProtocolTreeNode
 from .message import MessageProtocolEntity
 class TextMessageProtocolEntity(MessageProtocolEntity):
     '''

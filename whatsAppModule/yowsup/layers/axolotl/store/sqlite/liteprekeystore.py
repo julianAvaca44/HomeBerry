@@ -1,6 +1,6 @@
 from axolotl.state.prekeystore import PreKeyStore
 from axolotl.state.prekeyrecord import PreKeyRecord
-import sys
+from whatsAppModule.yowsup.layers.axolotl.protocolentities.noprekeyrecord import NoPrekeyRecordException
 class LitePreKeyStore(PreKeyStore):
     def __init__(self, dbConn):
         """
@@ -18,7 +18,7 @@ class LitePreKeyStore(PreKeyStore):
 
         result = cursor.fetchone()
         if not result:
-            raise Exception("No such prekeyRecord!")
+            raise NoPrekeyRecordException("No such prekeyRecord!")
 
         return PreKeyRecord(serialized = result[0])
 
@@ -34,8 +34,7 @@ class LitePreKeyStore(PreKeyStore):
         #self.removePreKey(preKeyId)
         q = "INSERT INTO prekeys (prekey_id, record) VALUES(?,?)"
         cursor = self.dbConn.cursor()
-        serialized = preKeyRecord.serialize()
-        cursor.execute(q, (preKeyId, buffer(serialized) if sys.version_info < (2,7) else serialized))
+        cursor.execute(q, (preKeyId, preKeyRecord.serialize()))
         self.dbConn.commit()
 
     def containsPreKey(self, preKeyId):

@@ -1,6 +1,6 @@
-from yowsup.layers.protocol_iq.protocolentities.test_iq import IqProtocolEntityTest
-from yowsup.layers.protocol_profiles.protocolentities import ResultPrivacyIqProtocolEntity
-from yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.layers.protocol_iq.protocolentities.test_iq import IqProtocolEntityTest
+from whatsAppModule.yowsup.layers.protocol_profiles.protocolentities import ResultPrivacyIqProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
 
 entity = ResultPrivacyIqProtocolEntity({"profile":"all","last":"none","status":"contacts"})
 

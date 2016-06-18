@@ -1,8 +1,8 @@
-from yowsup.layers.auth import YowAuthenticationProtocolLayer
-from yowsup.layers import YowLayerEvent, YowLayerTest
-from yowsup.layers.auth.protocolentities import StreamFeaturesProtocolEntity,AuthProtocolEntity, ChallengeProtocolEntity
-from yowsup.structs import ProtocolTreeNode
-from yowsup.stacks import YowStack
+from whatsAppModule.yowsup.layers.auth import YowAuthenticationProtocolLayer
+from whatsAppModule.yowsup.layers import YowLayerEvent, YowLayerTest
+from whatsAppModule.yowsup.layers.auth.protocolentities import StreamFeaturesProtocolEntity,AuthProtocolEntity, ChallengeProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.stacks import YowStack
 import base64
 # from unittest.mock import MagicMock
 
@@ -20,7 +20,7 @@ class AuthenticationProtocolLayerTest(YowLayerTest, YowAuthenticationProtocolLay
 
     def test_streamfeatures(self):
         self._sendFeatures()
-        self.assertEqual(self.lowerSink.pop(), StreamFeaturesProtocolEntity([]).toProtocolTreeNode())
+        self.assertEqual(self.lowerSink.pop(), StreamFeaturesProtocolEntity(["readreceipts","groups_v2","privacy","presence"]).toProtocolTreeNode())
 
     def test_auth(self):
         self._sendAuth()

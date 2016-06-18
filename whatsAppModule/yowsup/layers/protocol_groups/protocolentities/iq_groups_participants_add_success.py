@@ -1,5 +1,5 @@
-from yowsup.structs import ProtocolTreeNode
-from yowsup.layers.protocol_iq.protocolentities import ResultIqProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.layers.protocol_iq.protocolentities import ResultIqProtocolEntity
 class SuccessAddParticipantsIqProtocolEntity(ResultIqProtocolEntity):
     '''
     <iq type="result" from="{{group_jid}}" id="{{id}}">

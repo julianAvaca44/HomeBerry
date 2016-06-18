@@ -1,5 +1,5 @@
-from yowsup.layers.protocol_acks.protocolentities.ack_outgoing import OutgoingAckProtocolEntity
-from yowsup.structs.protocolentity import ProtocolEntityTest
+from whatsAppModule.yowsup.layers.protocol_acks.protocolentities.ack_outgoing import OutgoingAckProtocolEntity
+from whatsAppModule.yowsup.structs.protocolentity import ProtocolEntityTest
 import unittest
 
 entity = OutgoingAckProtocolEntity("12345", "receipt", "delivery", "to_jid")

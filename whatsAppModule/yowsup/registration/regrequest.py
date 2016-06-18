@@ -19,9 +19,9 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 '''
 
-from yowsup.common.http.warequest import WARequest
-from yowsup.common.http.waresponseparser import JSONResponseParser
-from yowsup.common.tools import StorageTools
+from whatsAppModule.yowsup.common.http.warequest import WARequest
+from whatsAppModule.yowsup.common.http.waresponseparser import JSONResponseParser
+from whatsAppModule.yowsup.common.tools import StorageTools
 import hashlib
 import os
 

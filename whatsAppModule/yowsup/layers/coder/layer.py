@@ -1,5 +1,5 @@
-from yowsup.layers import YowLayer, YowLayerEvent, EventCallback
-from yowsup.layers.network import YowNetworkLayer
+from whatsAppModule.yowsup.layers import YowLayer, YowLayerEvent, EventCallback
+from whatsAppModule.yowsup.layers.network import YowNetworkLayer
 from .encoder import WriteEncoder
 from .decoder import ReadDecoder
 from .tokendictionary import TokenDictionary

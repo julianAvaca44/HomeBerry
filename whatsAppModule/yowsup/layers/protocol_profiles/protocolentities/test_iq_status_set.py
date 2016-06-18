@@ -1,6 +1,6 @@
-from yowsup.layers.protocol_iq.protocolentities.test_iq import IqProtocolEntityTest
-from yowsup.layers.protocol_profiles.protocolentities import SetStatusIqProtocolEntity
-from yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.layers.protocol_iq.protocolentities.test_iq import IqProtocolEntityTest
+from whatsAppModule.yowsup.layers.protocol_profiles.protocolentities import SetStatusIqProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
 
 class SetStatusIqProtocolEntityTest(IqProtocolEntityTest):
     def setUp(self):

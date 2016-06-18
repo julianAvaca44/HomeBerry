@@ -1,5 +1,5 @@
-from yowsup.layers import YowLayer
-from yowsup import ProtocolTreeNode
+from whatsAppModule.yowsup.layers import YowLayer
+from whatsAppModule.yowsup import ProtocolTreeNode
 from .mediadownloader import MediaDownloader
 import shutil, os, logging
 logger = logging.getLogger(__name__)

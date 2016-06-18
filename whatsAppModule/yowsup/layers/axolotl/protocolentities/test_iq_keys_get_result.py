@@ -1,7 +1,7 @@
-from yowsup.common import YowConstants
-from yowsup.layers.protocol_iq.protocolentities.test_iq_result import ResultIqProtocolEntityTest
-from yowsup.layers.axolotl.protocolentities import ResultGetKeysIqProtocolEntity
-from yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.common import YowConstants
+from whatsAppModule.yowsup.layers.protocol_iq.protocolentities.test_iq_result import ResultIqProtocolEntityTest
+from whatsAppModule.yowsup.layers.axolotl.protocolentities import ResultGetKeysIqProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
 from axolotl.util.keyhelper import KeyHelper
 from axolotl.ecc.curve import Curve
 

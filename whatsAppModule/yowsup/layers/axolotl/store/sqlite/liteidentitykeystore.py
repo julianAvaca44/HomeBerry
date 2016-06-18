@@ -1,8 +1,9 @@
 from axolotl.state.identitykeystore import IdentityKeyStore
+from axolotl.ecc.curve import Curve
 from axolotl.identitykey import IdentityKey
+from axolotl.util.keyhelper import KeyHelper
 from axolotl.identitykeypair import IdentityKeyPair
 from axolotl.ecc.djbec import *
-import sys
 
 
 class LiteIdentityKeyStore(IdentityKeyStore):
@@ -41,16 +42,8 @@ class LiteIdentityKeyStore(IdentityKeyStore):
     def storeLocalData(self, registrationId, identityKeyPair):
         q = "INSERT INTO identities(recipient_id, registration_id, public_key, private_key) VALUES(-1, ?, ?, ?)"
         c = self.dbConn.cursor()
-        pubKey = identityKeyPair.getPublicKey().getPublicKey().serialize()
-        privKey = identityKeyPair.getPrivateKey().serialize()
-
-        if sys.version_info < (2,7):
-            pubKey = buffer(pubKey)
-            privKey = buffer(privKey)
-
-        c.execute(q, (registrationId,
-                      pubKey,
-                      privKey))
+        c.execute(q, (registrationId, identityKeyPair.getPublicKey().getPublicKey().serialize(),
+                      identityKeyPair.getPrivateKey().serialize()))
 
         self.dbConn.commit()
 
@@ -62,9 +55,7 @@ class LiteIdentityKeyStore(IdentityKeyStore):
 
         q = "INSERT INTO identities (recipient_id, public_key) VALUES(?, ?)"
         c = self.dbConn.cursor()
-
-        pubKey = identityKey.getPublicKey().serialize()
-        c.execute(q, (recipientId, buffer(pubKey) if sys.version_info < (2,7) else pubKey))
+        c.execute(q, (recipientId, identityKey.getPublicKey().serialize()))
         self.dbConn.commit()
 
     def isTrustedIdentity(self, recipientId, identityKey):
@@ -74,10 +65,4 @@ class LiteIdentityKeyStore(IdentityKeyStore):
         result = c.fetchone()
         if not result:
             return True
-
-        pubKey = identityKey.getPublicKey().serialize()
-
-        if sys.version_info < (2, 7):
-            pubKey = buffer(pubKey)
-
-        return result[0] == pubKey
+        return result[0] == identityKey.getPublicKey().serialize()

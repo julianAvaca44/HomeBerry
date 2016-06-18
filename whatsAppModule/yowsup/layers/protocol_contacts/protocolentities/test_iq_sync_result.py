@@ -1,5 +1,5 @@
-from yowsup.layers.protocol_contacts.protocolentities.iq_sync_result import ResultSyncIqProtocolEntity
-from yowsup.structs.protocolentity import ProtocolEntityTest
+from whatsAppModule.yowsup.layers.protocol_contacts.protocolentities.iq_sync_result import ResultSyncIqProtocolEntity
+from whatsAppModule.yowsup.structs.protocolentity import ProtocolEntityTest
 import unittest
 
 entity = ResultSyncIqProtocolEntity("123", "1.30615237617e+17", 0,

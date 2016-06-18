@@ -511,9 +511,9 @@ class TokenDictionary:
         targetDict = self.dictionary
         if secondary:
             targetDict = self.secondaryDictionary
-        elif index > 236 and index < (236 + len(self.secondaryDictionary)):
+        elif index >= 236 and index < (236 + len(self.secondaryDictionary)):
             targetDict = self.secondaryDictionary
-            index = index - 237
+            index = index - 236
         if index < 0 or index > len(targetDict) - 1:
             return None
 

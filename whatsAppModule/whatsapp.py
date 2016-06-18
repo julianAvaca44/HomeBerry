@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 import sys, argparse, logging
-from .yowsup.env import YowsupEnv
+#from whatsAppModule.yowsup.env import YowsupEnv
 from whatsAppModule.yowsup.layers.interface                   import YowInterfaceLayer, ProtocolEntityCallback
-from yowsup.stacks import  YowStackBuilder
-from yowsup.layers.auth import AuthError
-from yowsup.layers import YowLayerEvent
-from yowsup.layers.network import YowNetworkLayer
+from whatsAppModule.yowsup.stacks import  YowStackBuilder
+from whatsAppModule.yowsup.layers.auth import AuthError
+from whatsAppModule.yowsup.layers import YowLayerEvent
+from whatsAppModule.yowsup.layers.network import YowNetworkLayer
 import constantes as const
 from analaizerModule import messageAnalizer as am
 from actionModule import action as actm
 
-from yowsup.layers.protocol_media.protocolentities import RequestUploadIqProtocolEntity
-from yowsup.layers.protocol_media.mediauploader import MediaUploader
-from yowsup.layers.protocol_media.protocolentities.message_media_downloadable_image import ImageDownloadableMediaMessageProtocolEntity
+from whatsAppModule.yowsup.layers.protocol_media.protocolentities import RequestUploadIqProtocolEntity
+from whatsAppModule.yowsup.layers.protocol_media.mediauploader import MediaUploader
+from whatsAppModule.yowsup.layers.protocol_media.protocolentities.message_media_downloadable_image import ImageDownloadableMediaMessageProtocolEntity
 
 logger = logging.getLogger("yowsup-cli")
 
@@ -54,7 +54,17 @@ class EchoLayer(YowInterfaceLayer):
                     messageProtocolEntity.setBody(message)
                     self.toLower(messageProtocolEntity.forward(messageProtocolEntity.getFrom()))
                     self.toLower(messageProtocolEntity.ack())
+        elif messageProtocolEntity.getType() == "media":
+			if messageProtocolEntity.getMediaType() in ("audio"):
+				fileOut = self.getDownloadableMediaMessageBody(messageProtocolEntity)
+				messageText = am.convertSpeechToText(messageProtocolEntity, fileOut)
+				commands = am.analizarMessage(messageText)
+				message = actm.acction(commands)
+				print 'Respuesta: %s' % message
+			
 
+			
+			
         self.toLower(messageProtocolEntity.ack(True))
     @ProtocolEntityCallback("receipt")
     def onReceipt(self, entity):
@@ -97,3 +107,17 @@ class EchoLayer(YowInterfaceLayer):
         elif mediaType == RequestUploadIqProtocolEntity.MEDIA_TYPE_VIDEO:
         	entity = VideoDownloadableMediaMessageProtocolEntity.fromFilePath(filePath, url, ip, to, caption = caption)
         self.toLower(entity)
+
+
+    def getDownloadableMediaMessageBody(self, message):
+        filename = "./audio/voice%s"%message.getExtension() 
+        with open(filename, 'wb') as f:
+            f.write(message.getMediaContent())
+        return filename
+        #return "[Media Type:{media_type}, Size:{media_size}, URL:{media_url}, FILE:{fname}]".format(
+        #    media_type=message.getMediaType(),
+        #    media_size=message.getMediaSize(),
+        #    media_url=message.getMediaUrl(),
+        #    fname=filename
+        #)
+        

@@ -1,5 +1,5 @@
-from yowsup.structs import ProtocolEntity, ProtocolTreeNode
-from yowsup.layers.protocol_iq.protocolentities import IqProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolEntity, ProtocolTreeNode
+from whatsAppModule.yowsup.layers.protocol_iq.protocolentities import IqProtocolEntity
 class CleanIqProtocolEntity(IqProtocolEntity):
     '''
     <iq id="" type="set" to="self.domain" xmlns="urn:xmpp:whatsapp:dirty">

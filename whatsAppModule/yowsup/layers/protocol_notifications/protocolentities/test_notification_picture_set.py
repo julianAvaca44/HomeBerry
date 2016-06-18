@@ -1,6 +1,6 @@
-from yowsup.layers.protocol_notifications.protocolentities.notification_picture_set import SetPictureNotificationProtocolEntity
-from yowsup.structs import ProtocolTreeNode
-from yowsup.layers.protocol_notifications.protocolentities.test_notification_picture import PictureNotificationProtocolEntityTest
+from whatsAppModule.yowsup.layers.protocol_notifications.protocolentities.notification_picture_set import SetPictureNotificationProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.layers.protocol_notifications.protocolentities.test_notification_picture import PictureNotificationProtocolEntityTest
 
 class SetPictureNotificationProtocolEntityTest(PictureNotificationProtocolEntityTest):
     def setUp(self):

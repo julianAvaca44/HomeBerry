@@ -1,5 +1,5 @@
-from yowsup.layers.protocol_contacts.protocolentities import AddContactNotificationProtocolEntity
-from yowsup.structs.protocolentity import ProtocolEntityTest
+from whatsAppModule.yowsup.layers.protocol_contacts.protocolentities import AddContactNotificationProtocolEntity
+from whatsAppModule.yowsup.structs.protocolentity import ProtocolEntityTest
 import time
 import unittest
 

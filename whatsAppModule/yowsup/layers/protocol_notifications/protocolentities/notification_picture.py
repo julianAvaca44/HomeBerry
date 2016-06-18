@@ -1,4 +1,4 @@
-from yowsup.structs import ProtocolEntity, ProtocolTreeNode
+from whatsAppModule.yowsup.structs import ProtocolEntity, ProtocolTreeNode
 from .notification import NotificationProtocolEntity
 class PictureNotificationProtocolEntity(NotificationProtocolEntity):
     '''

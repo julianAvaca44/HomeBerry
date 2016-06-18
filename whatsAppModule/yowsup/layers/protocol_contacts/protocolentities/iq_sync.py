@@ -1,5 +1,5 @@
-from yowsup.structs import ProtocolTreeNode
-from yowsup.layers.protocol_iq.protocolentities import IqProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.layers.protocol_iq.protocolentities import IqProtocolEntity
 import time
 
 class SyncIqProtocolEntity(IqProtocolEntity):

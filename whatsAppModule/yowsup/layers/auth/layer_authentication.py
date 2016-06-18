@@ -1,15 +1,14 @@
-from yowsup.common import YowConstants
-from yowsup.layers import YowLayerEvent, YowProtocolLayer, EventCallback
+from whatsAppModule.yowsup.common import YowConstants
+from whatsAppModule.yowsup.layers import YowLayerEvent, YowProtocolLayer, EventCallback
 from .keystream import KeyStream
-from yowsup.common.tools import TimeTools
+from whatsAppModule.yowsup.common.tools import TimeTools
 from .layer_crypt import YowCryptLayer
-from yowsup.layers.network import YowNetworkLayer
+from whatsAppModule.yowsup.layers.network import YowNetworkLayer
 from .autherror import AuthError
 from .protocolentities import *
-from yowsup.common.tools import StorageTools
-from yowsup.env import YowsupEnv
+from whatsAppModule.yowsup.common.tools import StorageTools
 from .layer_interface_authentication import YowAuthenticationProtocolLayerInterface
-from .protocolentities import StreamErrorProtocolEntity
+from whatsAppModule.yowsup.env import CURRENT_ENV
 import base64
 
 class YowAuthenticationProtocolLayer(YowProtocolLayer):
@@ -85,17 +84,17 @@ class YowAuthenticationProtocolLayer(YowProtocolLayer):
         self._sendResponse(nodeEntity.getNonce())
 
     def handleStreamError(self, node):
-        nodeEntity = StreamErrorProtocolEntity.fromProtocolTreeNode(node)
-        errorType = nodeEntity.getErrorType()
-
-        if not errorType:
+        if node.getChild("text"):
+            nodeEntity = StreamErrorConflictProtocolEntity.fromProtocolTreeNode(node)
+        elif node.getChild("ack"):
+            nodeEntity = StreamErrorAckProtocolEntity.fromProtocolTreeNode(node)
+        else:
             raise AuthError("Unhandled stream:error node:\n%s" % node)
-
         self.toUpper(nodeEntity)
 
     ##senders
     def _sendFeatures(self):
-        self.entityToLower(StreamFeaturesProtocolEntity([]))
+        self.entityToLower(StreamFeaturesProtocolEntity(["readreceipts", "groups_v2", "privacy", "presence"]))
 
     def _sendAuth(self):
         passive = self.getProp(self.__class__.PROP_PASSIVE, False)
@@ -124,7 +123,6 @@ class YowAuthenticationProtocolLayer(YowProtocolLayer):
 
     def generateAuthBlob(self, nonce):
         keys = KeyStream.generateKeys(self.credentials[1], nonce)
-        currentEnv = YowsupEnv.getCurrent()
 
         inputKey = KeyStream(keys[2], keys[3])
         outputKey = KeyStream(keys[0], keys[1])
@@ -146,10 +144,10 @@ class YowAuthenticationProtocolLayer(YowProtocolLayer):
         nums.extend(time_bytes)
 
         strCat = "\x00\x00\x00\x00\x00\x00\x00\x00"
-        strCat += currentEnv.getOSVersion() + "\x00"
-        strCat += currentEnv.getManufacturer() + "\x00"
-        strCat += currentEnv.getDeviceName() + "\x00"
-        strCat += currentEnv.getBuildVersion()
+        strCat += CURRENT_ENV.getOSVersion() + "\x00"
+        strCat += CURRENT_ENV.getManufacturer() + "\x00"
+        strCat += CURRENT_ENV.getDeviceName() + "\x00"
+        strCat += CURRENT_ENV.getBuildVersion()
         nums.extend(list(map(ord, strCat)))
 
         encoded = outputKey.encodeMessage(nums, 0, 4, len(nums) - 4)

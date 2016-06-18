@@ -1,5 +1,5 @@
-from yowsup.layers.protocol_iq.protocolentities.iq import IqProtocolEntity
-from yowsup.structs.protocoltreenode import ProtocolTreeNode
+from whatsAppModule.yowsup.layers.protocol_iq.protocolentities.iq import IqProtocolEntity
+from whatsAppModule.yowsup.structs.protocoltreenode import ProtocolTreeNode
 class LastseenIqProtocolEntity(IqProtocolEntity):
     XMLNS = "jabber:iq:last"
     def __init__(self, jid, _id = None):

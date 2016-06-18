@@ -1,10 +1,10 @@
 import time
 import logging
 from threading import Thread, Lock
-from yowsup.layers import YowProtocolLayer, YowLayerEvent, EventCallback
-from yowsup.common import YowConstants
-from yowsup.layers.network import YowNetworkLayer
-from yowsup.layers.auth import YowAuthenticationProtocolLayer
+from whatsAppModule.yowsup.layers import YowProtocolLayer, YowLayerEvent, EventCallback
+from whatsAppModule.yowsup.common import YowConstants
+from whatsAppModule.yowsup.layers.network import YowNetworkLayer
+from whatsAppModule.yowsup.layers.auth import YowAuthenticationProtocolLayer
 from .protocolentities import *
 
 

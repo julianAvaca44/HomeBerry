@@ -1,5 +1,5 @@
-from yowsup.structs import ProtocolEntity, ProtocolTreeNode
-from yowsup.layers.protocol_notifications.protocolentities import NotificationProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolEntity, ProtocolTreeNode
+from whatsAppModule.yowsup.layers.protocol_notifications.protocolentities import NotificationProtocolEntity
 from .notification_groups import GroupsNotificationProtocolEntity
 
 class SubjectGroupsNotificationProtocolEntity(GroupsNotificationProtocolEntity):

@@ -1,6 +1,6 @@
-from yowsup.layers.protocol_media.protocolentities.test_message_media import MediaMessageProtocolEntityTest
-from yowsup.layers.protocol_media.protocolentities import LocationMediaMessageProtocolEntity
-from yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.layers.protocol_media.protocolentities.test_message_media import MediaMessageProtocolEntityTest
+from whatsAppModule.yowsup.layers.protocol_media.protocolentities import LocationMediaMessageProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
 class LocationMediaMessageProtocolEntityTest(MediaMessageProtocolEntityTest):
     def setUp(self):
         super(LocationMediaMessageProtocolEntityTest, self).setUp()

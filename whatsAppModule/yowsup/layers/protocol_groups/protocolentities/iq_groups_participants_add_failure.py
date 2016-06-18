@@ -1,4 +1,4 @@
-from yowsup.layers.protocol_iq.protocolentities import ErrorIqProtocolEntity
+from whatsAppModule.yowsup.layers.protocol_iq.protocolentities import ErrorIqProtocolEntity
 class FailureAddParticipantsIqProtocolEntity(ErrorIqProtocolEntity):
     '''
     <iq type="error" from="{{group_jid}}" id="{{id}}">

@@ -1,5 +1,5 @@
 import unittest
-from yowsup.layers.auth.keystream import KeyStream
+from whatsAppModule.yowsup.layers.auth.keystream import KeyStream
 class KeyStreamTest(unittest.TestCase):
 
     def setUp(self):

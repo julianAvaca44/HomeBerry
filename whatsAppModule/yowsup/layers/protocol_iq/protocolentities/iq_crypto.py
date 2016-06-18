@@ -1,5 +1,5 @@
 from .iq import IqProtocolEntity
-from yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
 class CryptoIqProtocolEntity(IqProtocolEntity):
     def __init__(self):
         super(CryptoIqProtocolEntity, self).__init__("urn:xmpp:whatsapp:account", _type="get")

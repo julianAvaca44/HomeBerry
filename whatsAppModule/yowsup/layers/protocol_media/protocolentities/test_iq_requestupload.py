@@ -1,6 +1,6 @@
-from yowsup.layers.protocol_iq.protocolentities.test_iq import IqProtocolEntityTest
-from yowsup.layers.protocol_media.protocolentities import RequestUploadIqProtocolEntity
-from yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.layers.protocol_iq.protocolentities.test_iq import IqProtocolEntityTest
+from whatsAppModule.yowsup.layers.protocol_media.protocolentities import RequestUploadIqProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
 class RequestUploadIqProtocolEntityTest(IqProtocolEntityTest):
     def setUp(self):
         super(RequestUploadIqProtocolEntityTest, self).setUp()

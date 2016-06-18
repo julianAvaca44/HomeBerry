@@ -1,4 +1,4 @@
-# from yowsup.layers.protocol_media import mediacipher
+# from whatsAppModule.yowsup.layers.protocol_media import mediacipher
 import tempfile
 import os
 class DownloadableMediaMessageBuilder(object):

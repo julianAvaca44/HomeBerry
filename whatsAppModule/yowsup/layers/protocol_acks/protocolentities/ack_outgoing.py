@@ -1,3 +1,4 @@
+from whatsAppModule.yowsup.structs import ProtocolEntity, ProtocolTreeNode
 from .ack import AckProtocolEntity
 class OutgoingAckProtocolEntity(AckProtocolEntity):
 

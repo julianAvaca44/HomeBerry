@@ -1,7 +1,6 @@
 from axolotl.state.signedprekeystore import SignedPreKeyStore
 from axolotl.state.signedprekeyrecord import SignedPreKeyRecord
 from axolotl.invalidkeyidexception import InvalidKeyIdException
-import sys
 class LiteSignedPreKeyStore(SignedPreKeyStore):
     def __init__(self, dbConn):
         """
@@ -43,8 +42,7 @@ class LiteSignedPreKeyStore(SignedPreKeyStore):
 
         q = "INSERT INTO signed_prekeys (prekey_id, record) VALUES(?,?)"
         cursor = self.dbConn.cursor()
-        record = signedPreKeyRecord.serialize()
-        cursor.execute(q, (signedPreKeyId, buffer(record) if sys.version_info < (2,7) else record))
+        cursor.execute(q, (signedPreKeyId, signedPreKeyRecord.serialize()))
         self.dbConn.commit()
 
     def containsSignedPreKey(self, signedPreKeyId):

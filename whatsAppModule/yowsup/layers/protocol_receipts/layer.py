@@ -1,4 +1,4 @@
-from yowsup.layers import YowLayer, YowLayerEvent, YowProtocolLayer
+from whatsAppModule.yowsup.layers import YowLayer, YowLayerEvent, YowProtocolLayer
 from .protocolentities import *
 class YowReceiptProtocolLayer(YowProtocolLayer):
     def __init__(self):

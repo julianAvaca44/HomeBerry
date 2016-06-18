@@ -1,6 +1,6 @@
-from yowsup.layers.protocol_ib.protocolentities.test_ib import IbProtocolEntityTest
-from yowsup.layers.protocol_ib.protocolentities.dirty_ib import DirtyIbProtocolEntity
-from yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.layers.protocol_ib.protocolentities.test_ib import IbProtocolEntityTest
+from whatsAppModule.yowsup.layers.protocol_ib.protocolentities.dirty_ib import DirtyIbProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
 class DirtyIbProtocolEntityTest(IbProtocolEntityTest):
     def setUp(self):
         super(DirtyIbProtocolEntityTest, self).setUp()

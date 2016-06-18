@@ -1,5 +1,5 @@
-from yowsup.layers.protocol_media.protocolentities.message_media_downloadable import DownloadableMediaMessageProtocolEntity
-from yowsup.layers.protocol_media.protocolentities.test_message_media import MediaMessageProtocolEntityTest
+from whatsAppModule.yowsup.layers.protocol_media.protocolentities.message_media_downloadable import DownloadableMediaMessageProtocolEntity
+from whatsAppModule.yowsup.layers.protocol_media.protocolentities.test_message_media import MediaMessageProtocolEntityTest
 
 class DownloadableMediaMessageProtocolEntityTest(MediaMessageProtocolEntityTest):
     def setUp(self):

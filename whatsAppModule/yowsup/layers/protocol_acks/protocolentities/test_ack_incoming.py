@@ -1,5 +1,5 @@
-from yowsup.layers.protocol_acks.protocolentities.ack_incoming import IncomingAckProtocolEntity
-from yowsup.structs.protocolentity import ProtocolEntityTest
+from whatsAppModule.yowsup.layers.protocol_acks.protocolentities.ack_incoming import IncomingAckProtocolEntity
+from whatsAppModule.yowsup.structs.protocolentity import ProtocolEntityTest
 import unittest
 import time
 

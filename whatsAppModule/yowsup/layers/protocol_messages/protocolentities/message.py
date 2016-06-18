@@ -1,5 +1,5 @@
-from yowsup.structs import ProtocolEntity, ProtocolTreeNode
-from yowsup.layers.protocol_receipts.protocolentities  import OutgoingReceiptProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolEntity, ProtocolTreeNode
+from whatsAppModule.yowsup.layers.protocol_receipts.protocolentities  import OutgoingReceiptProtocolEntity
 from copy import deepcopy
 
 class MessageProtocolEntity(ProtocolEntity):
@@ -102,7 +102,7 @@ class MessageProtocolEntity(ProtocolEntity):
         return out
 
     def ack(self, read=False):
-        return OutgoingReceiptProtocolEntity(self.getId(), self.getFrom(), read, participant=self.getParticipant())
+        return OutgoingReceiptProtocolEntity(self.getId(), self.getFrom(), read, participant=self.getParticipant(), t=self.getTimestamp())
 
     def forward(self, to, _id = None):
         OutgoingMessage = deepcopy(self)

@@ -1,8 +1,8 @@
-from yowsup.structs import ProtocolEntity, ProtocolTreeNode
+from whatsAppModule.yowsup.structs import ProtocolEntity, ProtocolTreeNode
 from .message_media_downloadable import DownloadableMediaMessageProtocolEntity
 from .builder_message_media_downloadable import DownloadableMediaMessageBuilder
-from yowsup.layers.protocol_messages.proto.wa_pb2 import ImageMessage
-from yowsup.common.tools import ImageTools
+from whatsAppModule.yowsup.layers.protocol_messages.proto.wa_pb2 import ImageMessage
+from whatsAppModule.yowsup.common.tools import ImageTools
 
 class ImageDownloadableMediaMessageProtocolEntity(DownloadableMediaMessageProtocolEntity):
     '''
@@ -50,6 +50,7 @@ class ImageDownloadableMediaMessageProtocolEntity(DownloadableMediaMessageProtoc
         self.width      = int(width)
         self.height     = int(height)
         self.caption    = caption
+        self.cryptKeys  = '576861747341707020496d616765204b657973'
 
     def getCaption(self):
         return self.caption

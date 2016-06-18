@@ -1,6 +1,6 @@
-from yowsup.layers.protocol_calls.protocolentities.call import CallProtocolEntity
-from yowsup.structs import ProtocolTreeNode
-from yowsup.structs.protocolentity import ProtocolEntityTest
+from whatsAppModule.yowsup.layers.protocol_calls.protocolentities.call import CallProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.structs.protocolentity import ProtocolEntityTest
 import unittest
 
 class CallProtocolEntityTest(ProtocolEntityTest, unittest.TestCase):

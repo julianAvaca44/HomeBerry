@@ -1,5 +1,5 @@
-from yowsup.layers.protocol_chatstate.protocolentities.chatstate_incoming import IncomingChatstateProtocolEntity
-from yowsup.structs.protocolentity import ProtocolEntityTest
+from whatsAppModule.yowsup.layers.protocol_chatstate.protocolentities.chatstate_incoming import IncomingChatstateProtocolEntity
+from whatsAppModule.yowsup.structs.protocolentity import ProtocolEntityTest
 import unittest
 
 entity = IncomingChatstateProtocolEntity(IncomingChatstateProtocolEntity.STATE_TYPING, "jid@s.whatsapp.net")

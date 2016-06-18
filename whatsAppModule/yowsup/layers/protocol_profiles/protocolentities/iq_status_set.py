@@ -1,6 +1,6 @@
-from yowsup.common import YowConstants
-from yowsup.layers.protocol_iq.protocolentities import IqProtocolEntity
-from yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.common import YowConstants
+from whatsAppModule.yowsup.layers.protocol_iq.protocolentities import IqProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
 
 class SetStatusIqProtocolEntity(IqProtocolEntity):
     '''

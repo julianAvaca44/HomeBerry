@@ -1,19 +1,17 @@
-from yowsup.structs import ProtocolEntity, ProtocolTreeNode
+from whatsAppModule.yowsup.structs import ProtocolEntity, ProtocolTreeNode
 import sys
 class EncProtocolEntity(ProtocolEntity):
     TYPE_PKMSG  = "pkmsg"
     TYPE_MSG    = "msg"
     TYPE_SKMSG  = "skmsg"
     TYPES = (TYPE_PKMSG, TYPE_MSG, TYPE_SKMSG)
-
-    def __init__(self, type, version, data, mediaType = None, jid = None):
+    def __init__(self, type, version, data, mediaType = None):
         assert type in self.__class__.TYPES, "Unknown message enc type %s" % type
         super(EncProtocolEntity, self).__init__("enc")
         self.type = type
         self.version = int(version)
         self.data = data
         self.mediaType = mediaType
-        self.jid = jid
 
     def getType(self):
         return self.type
@@ -27,17 +25,11 @@ class EncProtocolEntity(ProtocolEntity):
     def getMediaType(self):
         return self.mediaType
 
-    def getJid(self):
-        return self.jid
-
     def toProtocolTreeNode(self):
         attribs = {"type": self.type, "v": str(self.version)}
         if self.mediaType:
             attribs["mediatype"] = self.mediaType
-        encNode =  ProtocolTreeNode("enc", attribs, data = self.data)
-        if self.jid:
-            return ProtocolTreeNode("to", {"jid": self.jid}, [encNode])
-        return encNode
+        return ProtocolTreeNode("enc", attribs, data = self.data)
 
     @staticmethod
     def fromProtocolTreeNode(node):

@@ -1,5 +1,5 @@
 import unittest
-from yowsup.env import S40YowsupEnv
+from whatsAppModule.yowsup.env import S40YowsupEnv
 class S40YowsupEnvTest(unittest.TestCase):
     def test_tokengen(self):
         phone = "1234567"

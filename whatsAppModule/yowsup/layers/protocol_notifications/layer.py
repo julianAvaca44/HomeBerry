@@ -1,6 +1,6 @@
-from yowsup.layers import YowLayer, YowLayerEvent, YowProtocolLayer
+from whatsAppModule.yowsup.layers import YowLayer, YowLayerEvent, YowProtocolLayer
 from .protocolentities import *
-from yowsup.layers.protocol_acks.protocolentities import OutgoingAckProtocolEntity
+from whatsAppModule.yowsup.layers.protocol_acks.protocolentities import OutgoingAckProtocolEntity
 class YowNotificationsProtocolLayer(YowProtocolLayer):
 
     def __init__(self):

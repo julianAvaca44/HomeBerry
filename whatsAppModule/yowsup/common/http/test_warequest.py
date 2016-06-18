@@ -1,1 +1,1 @@
-from yowsup.common.http.warequest import WARequest
+from whatsAppModule.yowsup.common.http.warequest import WARequest

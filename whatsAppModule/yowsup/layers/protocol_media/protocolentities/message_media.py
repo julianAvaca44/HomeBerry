@@ -1,5 +1,5 @@
-from yowsup.structs import ProtocolEntity, ProtocolTreeNode
-from yowsup.layers.protocol_messages.protocolentities import MessageProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolEntity, ProtocolTreeNode
+from whatsAppModule.yowsup.layers.protocol_messages.protocolentities import MessageProtocolEntity
 class MediaMessageProtocolEntity(MessageProtocolEntity):
     '''
     <message t="{{TIME_STAMP}}" from="{{CONTACT_JID}}" 
@@ -96,7 +96,9 @@ class MediaMessageProtocolEntity(MessageProtocolEntity):
     MEDIA_TYPE_AUDIO = "audio"
     MEDIA_TYPE_VCARD = "vcard"
     MEDIA_TYPE_LOCATION = "location"
-    TYPES_MEDIA = (MEDIA_TYPE_AUDIO, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_VCARD, MEDIA_TYPE_LOCATION)
+    MEDIA_TYPE_DOCUMENT = "document"
+    MEDIA_TYPE_URL = "url"
+    TYPES_MEDIA = (MEDIA_TYPE_AUDIO, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_VCARD, MEDIA_TYPE_LOCATION, MEDIA_TYPE_DOCUMENT, MEDIA_TYPE_URL)
 
     def __init__(self, mediaType, _id = None, _from = None, to = None, notify = None, timestamp = None, participant = None, preview = None, offline = None, retry = None):
         super(MediaMessageProtocolEntity, self).__init__("media", _id, _from, to, notify, timestamp, participant, offline, retry)

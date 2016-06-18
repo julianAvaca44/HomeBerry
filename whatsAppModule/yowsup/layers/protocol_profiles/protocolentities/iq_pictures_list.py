@@ -1,4 +1,4 @@
-from yowsup.structs import ProtocolEntity, ProtocolTreeNode
+from whatsAppModule.yowsup.structs import ProtocolEntity, ProtocolTreeNode
 from .iq_picture import PictureIqProtocolEntity
 class ListPicturesIqProtocolEntity(PictureIqProtocolEntity):
     '''

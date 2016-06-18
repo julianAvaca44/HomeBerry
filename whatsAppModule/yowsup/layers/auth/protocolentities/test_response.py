@@ -1,6 +1,6 @@
-from yowsup.layers.auth.protocolentities.response import ResponseProtocolEntity
-from yowsup.structs import ProtocolTreeNode
-from yowsup.structs.protocolentity import ProtocolEntityTest
+from whatsAppModule.yowsup.layers.auth.protocolentities.response import ResponseProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.structs.protocolentity import ProtocolEntityTest
 import unittest
 
 class ResponseProtocolEntityTest(ProtocolEntityTest, unittest.TestCase):

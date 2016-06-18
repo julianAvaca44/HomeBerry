@@ -1,5 +1,5 @@
-from yowsup.layers.protocol_presence.protocolentities.presence_subscribe import SubscribePresenceProtocolEntity
-from yowsup.layers.protocol_presence.protocolentities.test_presence import PresenceProtocolEntityTest
+from whatsAppModule.yowsup.layers.protocol_presence.protocolentities.presence_subscribe import SubscribePresenceProtocolEntity
+from whatsAppModule.yowsup.layers.protocol_presence.protocolentities.test_presence import PresenceProtocolEntityTest
 
 class SubscribePresenceProtocolEntityTest(PresenceProtocolEntityTest):
     def setUp(self):

@@ -1,6 +1,6 @@
-from yowsup.layers.protocol_notifications.protocolentities.notification_picture_delete import DeletePictureNotificationProtocolEntity
-from yowsup.structs import ProtocolTreeNode
-from yowsup.layers.protocol_notifications.protocolentities.test_notification_picture import PictureNotificationProtocolEntityTest
+from whatsAppModule.yowsup.layers.protocol_notifications.protocolentities.notification_picture_delete import DeletePictureNotificationProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.layers.protocol_notifications.protocolentities.test_notification_picture import PictureNotificationProtocolEntityTest
 
 class DeletePictureNotificationProtocolEntityTest(PictureNotificationProtocolEntityTest):
     def setUp(self):

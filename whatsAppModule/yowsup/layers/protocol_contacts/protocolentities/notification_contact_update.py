@@ -1,4 +1,4 @@
-from yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
 from .notification_contact import ContactNotificationProtocolEntity
 class UpdateContactNotificationProtocolEntity(ContactNotificationProtocolEntity):
     '''

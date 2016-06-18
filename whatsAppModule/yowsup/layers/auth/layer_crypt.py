@@ -1,5 +1,5 @@
-from yowsup.layers import YowLayer, EventCallback
-from yowsup.layers.network import YowNetworkLayer
+from whatsAppModule.yowsup.layers import YowLayer, EventCallback
+from whatsAppModule.yowsup.layers.network import YowNetworkLayer
 class YowCryptLayer(YowLayer):
     '''
         send:       bytearray -> bytearray

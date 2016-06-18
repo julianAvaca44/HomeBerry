@@ -6,6 +6,7 @@ from analaizerModule import messageAnalizer as am
 from actionModule import action as actm
 #from HomeBerry.analaizerModule import messageAnalizer as am
 import constantes as const
+import wget
 
 #############################################
 
@@ -35,10 +36,11 @@ def telegramBotRun():
 	    cId = message.chat.id
 	    msg = message.text
 	    if (message.voice == True):
+	    	print "Mensaje de voz"
 	    	#transformar audio a texto
 	    	#file_id = message.voice['file_id']
 	    	#message = am.convertSpeechToText(message, bot.getFile(file_id))
-	    	pass
+	    	#pass
 	    elif msg:
 	    	print(str(cId) + " : " + message.chat.first_name + " : " + msg)
 	    	commands = am.analizarMessage(msg)
@@ -52,7 +54,16 @@ def telegramBotRun():
             if(message == "photo"):
                 bot.send_photo(cId, open( './images/photo.jpg', 'rb'))
             else:
-                bot.send_message(cId, message)
+                bot.send_message(cId, message)               
            
+	@bot.message_handler(content_types=['voice', 'audio'])
+	def echo_audio(message):   
+		fileAudio = bot.get_file(message.voice.file_id)
+		urlFileAudio = "https://api.telegram.org/file/bot%s/%s" % (const.TOKEN,fileAudio.file_path)
+		fileNameOutput = "./audio/voice.%s" % fileAudio.file_path[-3:]
+		wget.download(urlFileAudio, fileNameOutput)
+		print am.convertSpeechToText(message, fileNameOutput)
+
+		
 	#Peticiones
 	bot.polling(none_stop = True) # Con esto, le decimos al bot que siga funcionando incluso si encuentra algun fallo.

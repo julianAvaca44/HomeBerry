@@ -1,6 +1,6 @@
-from yowsup.common import YowConstants
-from yowsup.layers.protocol_iq.protocolentities import IqProtocolEntity
-from yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.common import YowConstants
+from whatsAppModule.yowsup.layers.protocol_iq.protocolentities import IqProtocolEntity
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
 import os, time
 class SetKeysIqProtocolEntity(IqProtocolEntity):
     def __init__(self, identityKey, signedPreKey, preKeys, djbType, registrationId = None):

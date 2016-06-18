@@ -1,6 +1,6 @@
-from yowsup.layers import YowLayer, YowLayerEvent, YowProtocolLayer
+from whatsAppModule.yowsup.layers import YowLayer, YowLayerEvent, YowProtocolLayer
 from .protocolentities import *
-from yowsup.layers.protocol_iq.protocolentities import ErrorIqProtocolEntity
+from whatsAppModule.yowsup.layers.protocol_iq.protocolentities import ErrorIqProtocolEntity
 class YowPresenceProtocolLayer(YowProtocolLayer):
     def __init__(self):
         handleMap = {

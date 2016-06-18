@@ -1,7 +1,7 @@
-from yowsup.layers import YowLayerEvent, YowLayerTest
-from yowsup.structs import ProtocolTreeNode
-from yowsup.layers.auth import YowCryptLayer
-from yowsup.layers.auth.keystream import KeyStream
+from whatsAppModule.yowsup.layers import YowLayerEvent, YowLayerTest
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.layers.auth import YowCryptLayer
+from whatsAppModule.yowsup.layers.auth.keystream import KeyStream
 
 class CryptLayerTest(YowLayerTest, YowCryptLayer):
     def setUp(self):

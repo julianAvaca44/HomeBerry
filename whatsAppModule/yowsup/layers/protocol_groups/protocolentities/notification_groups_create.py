@@ -1,5 +1,5 @@
 from .notification_groups import GroupsNotificationProtocolEntity
-from yowsup.structs import ProtocolTreeNode
+from whatsAppModule.yowsup.structs import ProtocolTreeNode
 class CreateGroupsNotificationProtocolEntity(GroupsNotificationProtocolEntity):
     '''
 <notification notify="WhatsApp" id="{{id}}" t="1420402514" participant="{{participant_jiid}}" from="{{group_jid}}" type="w:gp2">

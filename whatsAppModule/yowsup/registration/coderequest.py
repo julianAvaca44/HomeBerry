@@ -1,9 +1,11 @@
-from yowsup.common.http.warequest import WARequest
-from yowsup.common.http.waresponseparser import JSONResponseParser
-from yowsup.common.tools import StorageTools, WATools
-from yowsup.registration.existsrequest import WAExistsRequest
-from yowsup.env import YowsupEnv
+from whatsAppModule.yowsup.common.http.warequest import WARequest
+from whatsAppModule.yowsup.common.http.waresponseparser import JSONResponseParser
+# from whatsAppModule.yowsup.env import CURRENT_ENV
+from whatsAppModule.yowsup.common.tools import StorageTools, WATools
+from whatsAppModule.yowsup.registration.existsrequest import WAExistsRequest
+from whatsAppModule.yowsup.env import S40YowsupEnv, AndroidYowsupEnv
 import random, hashlib, os
+CURRENT_ENV = AndroidYowsupEnv()
 
 class WACodeRequest(WARequest):
 
@@ -32,13 +34,13 @@ class WACodeRequest(WARequest):
         self.addParam("copiedrc", "1")
         self.addParam("hasinrc", "1")
         self.addParam("rcmatch", "1")
-        self.addParam("pid", int(random.uniform(100,9999)))
+        self.addParam("pid", os.getpid())
         self.addParam("rchash", hashlib.sha256(os.urandom(20)).hexdigest())
-        self.addParam("anhash", os.urandom(20))
+        self.addParam("anhash", hashlib.md5(os.urandom(20)).hexdigest())
         self.addParam("extexist", "1")
         self.addParam("extstate", "1")
 
-        self.addParam("token", YowsupEnv.getCurrent().getToken(p_in))
+        self.addParam("token", CURRENT_ENV.getToken(p_in))
 
         self.url = "v.whatsapp.net/v2/code"
 

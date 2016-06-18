@@ -1,4 +1,4 @@
-from yowsup.structs import ProtocolEntity, ProtocolTreeNode
+from whatsAppModule.yowsup.structs import ProtocolEntity, ProtocolTreeNode
 class SuccessProtocolEntity(ProtocolEntity):
     def __init__(self, status, kind, creation, expiration, props, t, nonce = None):
         super(SuccessProtocolEntity, self).__init__("success")

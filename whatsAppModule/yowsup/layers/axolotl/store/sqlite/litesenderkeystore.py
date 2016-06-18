@@ -1,7 +1,6 @@
 from axolotl.groups.state.senderkeystore import SenderKeyStore
 from axolotl.groups.state.senderkeyrecord import SenderKeyRecord
 import sqlite3
-import sys
 class LiteSenderKeyStore(SenderKeyStore):
     def __init__(self, dbConn):
         """
@@ -21,16 +20,13 @@ class LiteSenderKeyStore(SenderKeyStore):
         """
         q = "INSERT INTO sender_keys (group_id, sender_id, record) VALUES(?,?, ?)"
         cursor = self.dbConn.cursor()
-        serialized = senderKeyRecord.serialize()
-        if sys.version_info < (2,7):
-            serialized = buffer(serialized)
         try:
-            cursor.execute(q, (senderKeyName.getGroupId(), senderKeyName.getSender().getName(), serialized))
+            cursor.execute(q, (senderKeyName.getGroupId(), senderKeyName.getSender().getName(), senderKeyRecord.serialize()))
             self.dbConn.commit()
         except sqlite3.IntegrityError as e:
             q = "UPDATE sender_keys set record = ? WHERE group_id = ? and sender_id = ?"
             cursor = self.dbConn.cursor()
-            cursor.execute(q, (serialized, senderKeyName.getGroupId(), senderKeyName.getSender().getName()))
+            cursor.execute(q, (senderKeyRecord.serialize(), senderKeyName.getGroupId(), senderKeyName.getSender().getName()))
             self.dbConn.commit()
 
     def loadSenderKey(self, senderKeyName):

@@ -1,10 +1,10 @@
-from yowsup.layers import YowProtocolLayerTest
-from yowsup.layers.protocol_contacts import YowContactsIqProtocolLayer
-from yowsup.layers.protocol_contacts.protocolentities.test_notification_contact_add import entity as addEntity
-from yowsup.layers.protocol_contacts.protocolentities.test_notification_contact_update import entity as updateEntity
-from yowsup.layers.protocol_contacts.protocolentities.test_notification_contact_remove import entity as removeEntity
-from yowsup.layers.protocol_contacts.protocolentities.test_iq_sync_result import entity as syncResultEntity
-from yowsup.layers.protocol_contacts.protocolentities.test_iq_sync_get import entity as syncGetEntity
+from whatsAppModule.yowsup.layers import YowProtocolLayerTest
+from whatsAppModule.yowsup.layers.protocol_contacts import YowContactsIqProtocolLayer
+from whatsAppModule.yowsup.layers.protocol_contacts.protocolentities.test_notification_contact_add import entity as addEntity
+from whatsAppModule.yowsup.layers.protocol_contacts.protocolentities.test_notification_contact_update import entity as updateEntity
+from whatsAppModule.yowsup.layers.protocol_contacts.protocolentities.test_notification_contact_remove import entity as removeEntity
+from whatsAppModule.yowsup.layers.protocol_contacts.protocolentities.test_iq_sync_result import entity as syncResultEntity
+from whatsAppModule.yowsup.layers.protocol_contacts.protocolentities.test_iq_sync_get import entity as syncGetEntity
 
 class YowContactsIqProtocolLayerTest(YowProtocolLayerTest, YowContactsIqProtocolLayer):
     def setUp(self):

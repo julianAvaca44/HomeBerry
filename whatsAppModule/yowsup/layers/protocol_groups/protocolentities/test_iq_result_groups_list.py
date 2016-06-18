@@ -1,6 +1,6 @@
-from yowsup.layers.protocol_groups.protocolentities.iq_result_groups_list import ListGroupsResultIqProtocolEntity
-from yowsup.structs.protocolentity import ProtocolEntityTest
-from yowsup.layers.protocol_groups.structs import Group
+from whatsAppModule.yowsup.layers.protocol_groups.protocolentities.iq_result_groups_list import ListGroupsResultIqProtocolEntity
+from whatsAppModule.yowsup.structs.protocolentity import ProtocolEntityTest
+from whatsAppModule.yowsup.layers.protocol_groups.structs import Group
 import unittest
 import time
 

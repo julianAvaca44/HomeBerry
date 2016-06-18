@@ -1,5 +1,5 @@
-from yowsup.common import YowConstants
-from yowsup.structs import ProtocolEntity, ProtocolTreeNode
+from whatsAppModule.yowsup.common import YowConstants
+from whatsAppModule.yowsup.structs import ProtocolEntity, ProtocolTreeNode
 from .iq_groups import GroupsIqProtocolEntity
 class ListGroupsIqProtocolEntity(GroupsIqProtocolEntity):
     '''

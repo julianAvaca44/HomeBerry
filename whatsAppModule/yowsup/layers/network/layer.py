@@ -1,6 +1,6 @@
-from yowsup.layers import YowLayer, YowLayerEvent, EventCallback
-from yowsup.common.http.httpproxy import HttpProxy
-from yowsup.layers.network.layer_interface import YowNetworkLayerInterface
+from whatsAppModule.yowsup.layers import YowLayer, YowLayerEvent, EventCallback
+from whatsAppModule.yowsup.common.http.httpproxy import HttpProxy
+from whatsAppModule.yowsup.layers.network.layer_interface import YowNetworkLayerInterface
 import asyncore, socket, logging
 logger = logging.getLogger(__name__)
 

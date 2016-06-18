@@ -1,5 +1,5 @@
-from yowsup.layers import YowLayer, YowLayerEvent, YowProtocolLayer
-from yowsup.common import YowConstants
+from whatsAppModule.yowsup.layers import YowLayer, YowLayerEvent, YowProtocolLayer
+from whatsAppModule.yowsup.common import YowConstants
 from .protocolentities import *
 class YowContactsIqProtocolLayer(YowProtocolLayer):
     def __init__(self):
