@@ -1,25 +1,38 @@
-<div layout="row" layout-align="center start">
-  <div flex="30">
-    <div layout="row" layout-align="center center">
-      <div flex="100">
-        <md-button class="md-raised md-primary">Inicio</md-button>
-      </div>
-    </div>
-    <div layout="row" layout-align="center center">
-      <div flex="100">
-        <a ui-sref="main.devices" class="md-raised md-primary">Dispositivos</a>
-      </div>
-    </div>
-    <div layout="row" layout-align="center center">
-      <div flex="100">
-        <md-button class="md-raised md-primary">Zonas</md-button>
-      </div>
-    </div>
-    <div layout="row" layout-align="center center">
-      <div flex="100">
-        <md-button class="md-raised md-primary">Configuración</md-button>
-      </div>
-    </div>
+<div layout="row" layout-align="space-between start">
+  <div flex="20">
+    <md-content flex>
+      <md-list>
+        <md-list-item class="md-3-line">
+          <div class="md-list-item-text">
+            <h3><a ui-sref="main.home">Inicio</a></h3>
+          </div>
+          <md-divider inset></md-divider>
+        </md-list-item>
+        <md-list-item class="md-3-line">
+          <div class="md-list-item-text">
+            <h3>Usuarios y Perfiles</h3>
+          </div>
+          <md-divider inset></md-divider>
+        </md-list-item>
+         <md-list-item class="md-3-line">
+          <div class="md-list-item-text">
+            <h3><a ui-sref="main.devices">Dispositivos</a></h3>
+          </div>
+          <md-divider inset></md-divider>
+        </md-list-item>
+        <md-list-item class="md-3-line">
+          <div class="md-list-item-text">
+            <h3>Zonas</h3>
+          </div>
+        <md-divider inset></md-divider>
+        </md-list-item>
+        <md-list-item class="md-3-line">
+          <div class="md-list-item-text">
+            <h3>Configuración</h3>
+          </div>
+        </md-list-item>
+      </md-list>
+    </md-content>
   </div>
   <div flex="70">
     <div ui-view=""></div>
