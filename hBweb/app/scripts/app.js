@@ -15,23 +15,44 @@ angular
     'ngCookies',
     'ngMessages',
     'ngResource',
-    'ngRoute',
     'ngSanitize',
-    'ngTouch'
+    'ngMaterial',
+    'ui.router'
   ])
-  .config(function ($routeProvider) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl',
-        controllerAs: 'main'
-      })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl',
-        controllerAs: 'about'
-      })
-      .otherwise({
-        redirectTo: '/'
-      });
+  .config(function($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise("/HomeBerry");
+    $stateProvider
+        .state('main', {
+            abstract: true,
+            url: "/HomeBerry",
+            views:{
+                "navBar":{
+                  templateUrl: "../views/navBar.html",
+                  controller: "NavBarCtrl"
+                },
+                "body":{
+                  templateUrl: "../views/main.html",
+                  controller: "MainCtrl"
+                },
+                "footer": {
+                  templateUrl: "../views/footer.html"
+                }
+            } 
+        })
+        .state('main.home', {
+          url: '',
+          views: {
+              '@main': {
+                  templateUrl: "../views/home.html"
+              }
+            }
+          })
+        .state('main.devices', {
+          url: '/devices',
+          views: {
+              '@main': {
+                  templateUrl: "../views/devices.html"
+              }
+            }
+          });
   });
