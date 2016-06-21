@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 import sys, argparse, logging
-#from whatsAppModule.yowsup.env import YowsupEnv
 from whatsAppModule.yowsup.layers.interface                   import YowInterfaceLayer, ProtocolEntityCallback
+from whatsAppModule.yowsup.layers.protocol_messages.protocolentities  import TextMessageProtocolEntity
 from whatsAppModule.yowsup.stacks import  YowStackBuilder
 from whatsAppModule.yowsup.layers.auth import AuthError
 from whatsAppModule.yowsup.layers import YowLayerEvent
 from whatsAppModule.yowsup.layers.network import YowNetworkLayer
+from whatsAppModule.yowsup.common.tools import Jid
 import constantes as const
 from analaizerModule import messageAnalizer as am
 from actionModule import action as actm
@@ -23,7 +24,7 @@ class WhatsAppBot(object):
 
         self.stack = stackBuilder\
             .pushDefaultLayers(encryptionEnabled)\
-            .push(EchoLayer)\
+            .push(ListenerLayer)\
             .build()
 
         self.stack.setCredentials(credentials)
@@ -38,7 +39,7 @@ class WhatsAppBot(object):
     def _getCredentials(self):
         return const.TELEFONO, const.PASSWORD            
 
-class EchoLayer(YowInterfaceLayer):
+class ListenerLayer(YowInterfaceLayer):
 
     @ProtocolEntityCallback("message")
     def onMessage(self, messageProtocolEntity):
@@ -57,15 +58,15 @@ class EchoLayer(YowInterfaceLayer):
         elif messageProtocolEntity.getType() == "media":
 			if messageProtocolEntity.getMediaType() in ("audio"):
 				fileOut = self.getDownloadableMediaMessageBody(messageProtocolEntity)
-				messageText = am.convertSpeechToText(messageProtocolEntity, fileOut)
+				messageText = am.convertSpeechToText(fileOut)
 				commands = am.analizarMessage(messageText)
 				message = actm.acction(commands)
+				messageEntity = TextMessageProtocolEntity(message, to = self.normalizeJid(messageProtocolEntity.getFrom(False)))
+				self.toLower(messageEntity)
 				print 'Respuesta: %s' % message
 			
-
-			
-			
         self.toLower(messageProtocolEntity.ack(True))
+        
     @ProtocolEntityCallback("receipt")
     def onReceipt(self, entity):
         self.toLower(entity.ack())
@@ -114,10 +115,3 @@ class EchoLayer(YowInterfaceLayer):
         with open(filename, 'wb') as f:
             f.write(message.getMediaContent())
         return filename
-        #return "[Media Type:{media_type}, Size:{media_size}, URL:{media_url}, FILE:{fname}]".format(
-        #    media_type=message.getMediaType(),
-        #    media_size=message.getMediaSize(),
-        #    media_url=message.getMediaUrl(),
-        #    fname=filename
-        #)
-        

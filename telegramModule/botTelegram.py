@@ -4,9 +4,9 @@ import telebot
 import time # Librería para hacer que el programa que controla el bot no se acabe.
 from analaizerModule import messageAnalizer as am
 from actionModule import action as actm
-#from HomeBerry.analaizerModule import messageAnalizer as am
 import constantes as const
 import wget
+import os
 
 #############################################
 
@@ -35,13 +35,7 @@ def telegramBotRun():
 	    #analizo, limpio y filtro los mensajes, parseo los msj a comandos
 	    cId = message.chat.id
 	    msg = message.text
-	    if (message.voice == True):
-	    	print "Mensaje de voz"
-	    	#transformar audio a texto
-	    	#file_id = message.voice['file_id']
-	    	#message = am.convertSpeechToText(message, bot.getFile(file_id))
-	    	#pass
-	    elif msg:
+	    if msg:
 	    	print(str(cId) + " : " + message.chat.first_name + " : " + msg)
 	    	commands = am.analizarMessage(msg)
 	    	print("commads: ")
@@ -58,12 +52,20 @@ def telegramBotRun():
            
 	@bot.message_handler(content_types=['voice', 'audio'])
 	def echo_audio(message):   
+		cId = message.chat.id
 		fileAudio = bot.get_file(message.voice.file_id)
 		urlFileAudio = "https://api.telegram.org/file/bot%s/%s" % (const.TOKEN,fileAudio.file_path)
 		fileNameOutput = "./audio/voice.%s" % fileAudio.file_path[-3:]
+		#Elimina archivo anterior - Esto debería modificarse para guardar mensajes anteriores
+		try:
+			os.remove(os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "." + fileNameOutput)))
+		except OSError:
+			pass
 		wget.download(urlFileAudio, fileNameOutput)
-		print am.convertSpeechToText(message, fileNameOutput)
-
+		messageText = am.convertSpeechToText(fileNameOutput)
+		commands = am.analizarMessage(messageText)
+		message = actm.acction(commands)
+		bot.send_message(cId, message) 		
 		
 	#Peticiones
 	bot.polling(none_stop = True) # Con esto, le decimos al bot que siga funcionando incluso si encuentra algun fallo.
