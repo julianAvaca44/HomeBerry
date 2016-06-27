@@ -13,7 +13,7 @@ class myThread (threading.Thread):
         threading.Thread.__init__(self)
         self.type = type_process
         #La siguiente linea hace que cuando se cierre un thread se cierren todos
-        self.daemon = True;
+        self.daemon = True
     def run(self):
         if(self.type == 1):
             wa.WhatsAppBot().start()
