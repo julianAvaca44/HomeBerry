@@ -49,7 +49,6 @@ class ListenerLayer(YowInterfaceLayer):
                 print(commands)
                 message = actm.acction(commands)
                 if(message == "photo"):
-
                     self.media_send(messageProtocolEntity.getFrom(False), './images/photo.jpg', RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE)
                 else:
                     messageProtocolEntity.setBody(message)

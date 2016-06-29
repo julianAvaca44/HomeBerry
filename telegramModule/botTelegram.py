@@ -43,7 +43,7 @@ def telegramBotRun():
 	    else:
 	    	pass
 	    	#TODO:rechazar mensaje
-	    #envio comando y reenvio respuesta al usuario
+	        #envio comando y reenvio respuesta al usuario
             message = actm.acction(commands)
             if(message == "photo"):
                 bot.send_photo(cId, open( './images/photo.jpg', 'rb'))

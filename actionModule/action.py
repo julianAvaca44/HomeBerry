@@ -32,22 +32,29 @@ class motionSensor (threading.Thread):
         threading.Thread.__init__(self)
         #La siguiente linea hace que cuando se cierre un thread se cierren todos
         self.daemon = True
-        self.active = False
+        self.isRunning = False
+        self.mutex = threading.Lock()
+        self.mutex.acquire()
+        self.start()
+        
     def run(self):
-		self.active = True
-		self.activeAlarm()
-    def stop(self):
-		#detener 
-		self.active = False
-		print ("Alarma desactivada")
-		
-    def activeAlarm(self):
+		while True:
+			self.mutex.acquire()
+			self.checkMovements()
+    def active(self):
+		self.isRunning = True
+		self.mutex.release()		
+		print ("Alarma Activada")
+    def deactive(self):
+		self.isRunning = False
+		print ("Alarma desactivada")		
+    def checkMovements(self):
 		pir = MotionSensor(movimiento)
-		while self.active:
+		while self.isRunning:
 			time.sleep(1)
 			if pir.motion_detected:
 				print("Intruso detectado")
-				time.sleep(180)
+				time.sleep(600)
 
 def acction(command):
 	if command == None:
@@ -75,8 +82,8 @@ def funcOn(command):
 		GPIO.output(ventilador, 1)
 		return "Ventilador encendido"
 	elif(command[1] == "alarma"):
-		if not(objMotionSensor.active):
-			objMotionSensor.start()
+		if objMotionSensor.isRunning == False:
+			objMotionSensor.active()
 		return "Alarma activada"
 	else:
 		return "Dispositivo inexistente"
@@ -103,8 +110,8 @@ def funcOff(command):
 		GPIO.output(ventilador, 0)
 		return "Ventilador apagado"
 	elif(command[1] == "alarma"):
-		if objMotionSensor.active:
-			objMotionSensor.stop()
+		if objMotionSensor.isRunning == True:
+			objMotionSensor.deactive()
 		return "Alarma desactivada"                
 	else:
 		return "Dispositivo inexistente"
