@@ -49,7 +49,7 @@ class ListenerLayer(YowInterfaceLayer):
                 print(commands)
                 message = actm.acction(commands)
                 if(message == "photo"):
-                    self.media_send(messageProtocolEntity.getFrom(False), './images/photo.jpg', RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE)
+                    self.mediaSend(messageProtocolEntity.getFrom(False), './images/photo.jpg', RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE)
                 else:
                     messageProtocolEntity.setBody(message)
                     self.toLower(messageProtocolEntity.forward(messageProtocolEntity.getFrom()))
@@ -70,7 +70,11 @@ class ListenerLayer(YowInterfaceLayer):
     def onReceipt(self, entity):
         self.toLower(entity.ack())
 
-    def media_send(self, number, path, mediaType, caption = None):
+    def messageSend(self, number, content):
+         outgoingMessage = TextMessageProtocolEntity(content.encode("utf-8") if sys.version_info >= (3,0) else content, to = self.aliasToJid(number))
+         self.toLower(outgoingMessage)
+
+    def mediaSend(self, number, path, mediaType, caption = None):
         jid = self.normalizeJid(number)
         entity = RequestUploadIqProtocolEntity(mediaType, filePath=path)                                            
         successFn = lambda successEntity, originalEntity: self.onRequestUploadResult(jid, mediaType, path, successEntity, originalEntity, caption)

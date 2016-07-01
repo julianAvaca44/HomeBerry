@@ -15,7 +15,7 @@ led[1] = 4
 led[2] = 17
 botonEncenderLed1 = 27
 botonEncenderLed2 = 22
-ventilador = 23
+ventilador = 18
 
 
 GPIO.setup(botonEncenderLed1, GPIO.IN, GPIO.PUD_UP)

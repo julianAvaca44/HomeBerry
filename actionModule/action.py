@@ -16,6 +16,9 @@ from gpiozero import MotionSensor
 import threading
 import time
 
+#TODO: Mejorar esto!
+#from whatsAppModule import whatsapp as wa
+
 
 #PONER EN CONSTANTES O ALGUN LADO GENERAL
 led = {}
@@ -54,6 +57,8 @@ class motionSensor (threading.Thread):
 			time.sleep(1)
 			if pir.motion_detected:
 				print("Intruso detectado")
+				#TODO: Este grupo quedo duro, ver configuracion
+				#whatsAppModule.messageSend("5491162737159-1467366059", "Intruso detectado")
 				time.sleep(600)
 
 def acction(command):
@@ -70,21 +75,32 @@ def funcOn(command):
 	print("funcOn")
 	if(command[1] == "luz"):
 		if(len(command)>2 and ( command[2]== "1" or command[2]== "2")):
-			GPIO.output(led[int(command[2])], 1)
-			return "Luz " + command[2] +" encendida"
+			if (GPIO.input(led[int(command[2])]) == False):
+				GPIO.output(led[int(command[2])], 1)
+				return "Luz " + command[2] + " encendida"
+			else:
+				return "Luz " + command[2] + " se encontraba encendida"
 		else:
 			return "Dispositivo inexistente"
 	elif(command[1] == "luces"):
-		GPIO.output(led[1], 1)
-		GPIO.output(led[2], 1)
-		return "Luces encendidas"                
+		if (GPIO.input(led[int(1)]) == False or GPIO.input(led[int(2)]) == False):
+			GPIO.output(led[1], 1)
+			GPIO.output(led[2], 1)
+			return "Luces encendidas"                
+		else:
+			return "Luces se encontraban encendidas"
 	elif(command[1] == "ventilador"):
-		GPIO.output(ventilador, 1)
-		return "Ventilador encendido"
+		if (GPIO.input(ventilador) == False):
+			GPIO.output(ventilador, 1)
+			return "Ventilador encendido"
+		else:
+			return "Ventilador se encontraba encendido"
 	elif(command[1] == "alarma"):
 		if objMotionSensor.isRunning == False:
 			objMotionSensor.active()
-		return "Alarma activada"
+			return "Alarma activada"
+		else:
+			return "Alarma se encontraba activada"
 	else:
 		return "Dispositivo inexistente"
 	#logica para comunicarse con la rasp y prender el dispositivo deseado
@@ -96,23 +112,35 @@ def funcOff(command):
 	#logica para comunicarse con la rasp y apgar el dispositivo deseado
 	#comparar con el mapa de la casa
 	if(command[1] == "luz"):
-		if(len(command)>2 and ( command[2]== "1" or command[2]== "2")):
-                        GPIO.output(led[int(command[2])], 0)
-                        return "Luz " + command[2] +" apagada"
+		if(len(command)>2 and (command[2]== "1" or command[2]== "2")):
+			if (GPIO.input(led[int(command[2])])):
+				GPIO.output(led[int(command[2])], 0)
+				return "Luz " + command[2] +" apagada"
+			else:
+				return "Luz se encontraba apagada"
 		else:
-                        return "Dispositivo inexistente"                
+			return "Dispositivo inexistente"                
 	elif(command[1] == "luces"):
-		GPIO.output(led[1], 0)
-		GPIO.output(led[2], 0)
-		return "Luces apagadas"
+		if (GPIO.input(led[int(1)]) == True or GPIO.input(led[int(2)]) == True):
+			GPIO.output(led[1], 0)
+			GPIO.output(led[2], 0)
+			return "Luces apagadas"
+		else:
+			return "Luces se encontraban apagadas"
 
 	elif(command[1] == "ventilador"):
-		GPIO.output(ventilador, 0)
-		return "Ventilador apagado"
+		if (GPIO.input(ventilador)):
+			GPIO.output(ventilador, 0)
+			return "Ventilador apagado"
+		else:
+			return "Ventilador se encontraba apagado"
+		
 	elif(command[1] == "alarma"):
 		if objMotionSensor.isRunning == True:
 			objMotionSensor.deactive()
-		return "Alarma desactivada"                
+			return "Alarma desactivada"                
+		else:
+			return "Alarma se encontraba desactivada"                
 	else:
 		return "Dispositivo inexistente"
 
@@ -166,5 +194,8 @@ listCommand = {
 
 
 objMotionSensor = motionSensor()
+
+#wa.messageSend("5491162737159-1467366059", "prueba")
+#print whatsAppModule.ListenerLayer.messageSend("5491162737159-1467366059", "prueba")
 
 
