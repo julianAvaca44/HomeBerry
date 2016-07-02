@@ -3,11 +3,6 @@
 #caso de algun fallo comunicar lo
 # la idea de cuando llega un comando que analize un objecto con la siguiente estructura
 
-
-
-#luego ejecutar la funcion, algo asi
-#listCommand.[command]() revisar y buscar la manera lo estoy escribiendo a medida q se me ocurre pero la idea esta jajaj
-
 import logging as log
 import RPi.GPIO as GPIO
 import os
@@ -247,7 +242,6 @@ def funPhoto(command):
         return "photo"
 
 
-
 listCommand = {
 	'encender': funcOn,
 	'apagar': funcOff,
@@ -261,6 +255,4 @@ listCommand = {
 
 objMotionSensor = motionSensor()
 objLightSensor = lightSensor()
-
-
 
