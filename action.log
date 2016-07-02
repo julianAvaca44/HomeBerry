@@ -1,0 +1,39 @@
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+DEBUG:requests.packages.urllib3.connectionpool:"GET /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/getUpdates?timeout=20&offset=1 HTTP/1.1" 200 269
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+DEBUG:requests.packages.urllib3.connectionpool:"POST /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/sendMessage?text=dispositivio+encendido&chat_id=220076678 HTTP/1.1" 200 247
+DEBUG:requests.packages.urllib3.connectionpool:"GET /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/getUpdates?timeout=20&offset=80654443 HTTP/1.1" 200 269
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+DEBUG:requests.packages.urllib3.connectionpool:"POST /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/sendMessage?text=luz+-+1.0%3A+se+encontraba+encendida&chat_id=220076678 HTTP/1.1" 200 259
+DEBUG:requests.packages.urllib3.connectionpool:"GET /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/getUpdates?timeout=20&offset=80654444 HTTP/1.1" 200 23
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+DEBUG:requests.packages.urllib3.connectionpool:"GET /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/getUpdates?timeout=20&offset=80654444 HTTP/1.1" 200 23
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+DEBUG:requests.packages.urllib3.connectionpool:"GET /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/getUpdates?timeout=20&offset=80654444 HTTP/1.1" 200 23
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+DEBUG:requests.packages.urllib3.connectionpool:"GET /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/getUpdates?timeout=20&offset=80654444 HTTP/1.1" 200 23
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+DEBUG:requests.packages.urllib3.connectionpool:"GET /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/getUpdates?timeout=20&offset=80654444 HTTP/1.1" 200 23
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+DEBUG:requests.packages.urllib3.connectionpool:"GET /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/getUpdates?timeout=20&offset=80654444 HTTP/1.1" 200 23
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+DEBUG:requests.packages.urllib3.connectionpool:"GET /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/getUpdates?timeout=20&offset=80654444 HTTP/1.1" 200 23
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+DEBUG:requests.packages.urllib3.connectionpool:"GET /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/getUpdates?timeout=20&offset=80654444 HTTP/1.1" 200 23
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+DEBUG:requests.packages.urllib3.connectionpool:"GET /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/getUpdates?timeout=20&offset=80654444 HTTP/1.1" 200 23
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+DEBUG:requests.packages.urllib3.connectionpool:"GET /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/getUpdates?timeout=20&offset=80654444 HTTP/1.1" 200 23
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+DEBUG:requests.packages.urllib3.connectionpool:"GET /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/getUpdates?timeout=20&offset=80654444 HTTP/1.1" 200 23
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+DEBUG:requests.packages.urllib3.connectionpool:"GET /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/getUpdates?timeout=20&offset=80654444 HTTP/1.1" 200 23
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+DEBUG:requests.packages.urllib3.connectionpool:"GET /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/getUpdates?timeout=20&offset=80654444 HTTP/1.1" 200 23
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+DEBUG:requests.packages.urllib3.connectionpool:"GET /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/getUpdates?timeout=20&offset=80654444 HTTP/1.1" 200 23
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
+DEBUG:requests.packages.urllib3.connectionpool:"GET /bot207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI/getUpdates?timeout=20&offset=80654444 HTTP/1.1" 200 23
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.telegram.org
