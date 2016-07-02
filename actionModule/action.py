@@ -16,19 +16,19 @@ from gpiozero import MotionSensor
 import threading
 import time
 
-#TODO: Mejorar esto!
-#from whatsAppModule import whatsapp as wa
 
-
-#PONER EN CONSTANTES O ALGUN LADO GENERAL
+#PONER EN CONSTANTES O ALGUN LADO GENERAL O BASE DE DATOS
 led = {}
 led[1] = 4
 led[2] = 17
 ventilador = 18
 tempHum = 23
 movimiento = 24
+sensorLuz = 25
 
 log.basicConfig(filename='./action.log', filemode='w', level=log.DEBUG)
+
+waListener = None
 
 class motionSensor (threading.Thread):
     def __init__(self):
@@ -47,7 +47,7 @@ class motionSensor (threading.Thread):
     def active(self):
 		self.isRunning = True
 		self.mutex.release()		
-		print ("Alarma Activada")
+		print ("Alarma activada")
     def deactive(self):
 		self.isRunning = False
 		print ("Alarma desactivada")		
@@ -56,10 +56,59 @@ class motionSensor (threading.Thread):
 		while self.isRunning:
 			time.sleep(1)
 			if pir.motion_detected:
+				funPhoto(None)
 				print("Intruso detectado")
-				#TODO: Este grupo quedo duro, ver configuracion
-				#whatsAppModule.messageSend("5491162737159-1467366059", "Intruso detectado")
+				if(waListener == None):
+					print("No tiene listener de WA")
+					try:
+						waListener.sendMessage("Intruso detectado", True)	
+					except:
+						print("De verdad no tiene listener")
+				else:
+					waListener.sendMessage("Intruso detectado", True)
 				time.sleep(600)
+
+class lightSensor (threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        #La siguiente linea hace que cuando se cierre un thread se cierren todos
+        self.daemon = True
+        self.isRunning = False
+        self.mutex = threading.Lock()
+        self.mutex.acquire()
+        self.start()
+    def run(self):
+		while True:
+			self.mutex.acquire()
+			self.checkLight()
+    def active(self):
+		self.isRunning = True
+		self.mutex.release()		
+		print ("Sensor de luz activado")
+    def deactive(self):
+		self.isRunning = False
+		print ("Sensor de luz desactivado")
+    def checkLight(self):
+		while self.isRunning:
+			time.sleep(2)
+			if(GPIO.input(sensorLuz) != GPIO.input(led[1]) or  GPIO.input(sensorLuz) != GPIO.input(led[2])):
+				messageToSend = ""
+				if(GPIO.input(sensorLuz) == 1):
+					funcOn(['encender', 'luces'])
+					messageToSend = "Se encendieron las luces externas"
+				else:
+					funcOff(['encender', 'luces'])
+					messageToSend = "Se apagaron las luces externas"
+				print(messageToSend)
+				if(waListener == None):
+					print("No tiene listener de WA")
+					try:
+						waListener.sendMessage(messageToSend)	
+					except:
+						print("De verdad no tiene listener")
+				else:
+					waListener.sendMessage(messageToSend)
+				time.sleep(1)
 
 def acction(command):
 	if command == None:
@@ -71,7 +120,6 @@ def acction(command):
 
 		
 def funcOn(command):
-
 	print("funcOn")
 	if(command[1] == "luz"):
 		if(len(command)>2 and ( command[2]== "1" or command[2]== "2")):
@@ -101,6 +149,15 @@ def funcOn(command):
 			return "Alarma activada"
 		else:
 			return "Alarma se encontraba activada"
+	elif(command[1] == "sensor"):
+		if(command[2] == "luz"):
+			if objLightSensor.isRunning == False:
+				objLightSensor.active()
+				return "Sensor de luz activo"
+			else:
+				return "Sensor de luz se encontraba activado"
+		else:
+			return "Dispositivo inexistente"
 	else:
 		return "Dispositivo inexistente"
 	#logica para comunicarse con la rasp y prender el dispositivo deseado
@@ -140,7 +197,16 @@ def funcOff(command):
 			objMotionSensor.deactive()
 			return "Alarma desactivada"                
 		else:
-			return "Alarma se encontraba desactivada"                
+			return "Alarma se encontraba desactivada"  
+	elif(command[1] == "sensor"):
+		if(command[2] == "luz"):
+			if objLightSensor.isRunning == True:
+				objLightSensor.deactive()
+				return "Sensor de luz apagado"
+			else:
+				return "Sensor de luz se encontraba apagado"
+		else:
+			return "Dispositivo inexistente"			              
 	else:
 		return "Dispositivo inexistente"
 
@@ -194,8 +260,7 @@ listCommand = {
 
 
 objMotionSensor = motionSensor()
+objLightSensor = lightSensor()
 
-#wa.messageSend("5491162737159-1467366059", "prueba")
-#print whatsAppModule.ListenerLayer.messageSend("5491162737159-1467366059", "prueba")
 
 

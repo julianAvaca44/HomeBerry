@@ -9,20 +9,21 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
 #pin temporal
-#ESTO DEBERIA ESTAR EN UN ARCH DE CONFIGURACION QUE SE USA AL INICIO
+#TODO: ESTO DEBERIA ESTAR EN UN ARCH DE CONFIGURACION QUE SE USA AL INICIO CON ACCESO A LA BASE
 led = {}
 led[1] = 4
 led[2] = 17
 botonEncenderLed1 = 27
 botonEncenderLed2 = 22
 ventilador = 18
-
+sensorLuz = 25
 
 GPIO.setup(botonEncenderLed1, GPIO.IN, GPIO.PUD_UP)
 GPIO.setup(botonEncenderLed2, GPIO.IN, GPIO.PUD_UP)
 GPIO.setup(led[1], GPIO.OUT)
 GPIO.setup(led[2], GPIO.OUT)
 GPIO.setup(ventilador, GPIO.OUT)
+GPIO.setup(sensorLuz, GPIO.IN)
 
 def buttonHandle():
     while True:

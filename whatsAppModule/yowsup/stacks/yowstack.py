@@ -222,3 +222,6 @@ class YowStack(object):
 
     def getLayer(self, layerIndex):
         return self.__stackInstances[layerIndex]
+
+    def getLastLayer(self):
+        return self.__stackInstances[len(self.__stackInstances)-1]

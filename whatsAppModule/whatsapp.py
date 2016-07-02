@@ -15,6 +15,8 @@ from whatsAppModule.yowsup.layers.protocol_media.protocolentities import Request
 from whatsAppModule.yowsup.layers.protocol_media.mediauploader import MediaUploader
 from whatsAppModule.yowsup.layers.protocol_media.protocolentities.message_media_downloadable_image import ImageDownloadableMediaMessageProtocolEntity
 
+import threading
+
 logger = logging.getLogger("yowsup-cli")
 
 class WhatsAppBot(object):
@@ -30,6 +32,10 @@ class WhatsAppBot(object):
         self.stack.setCredentials(credentials)
 
     def start(self):
+        objwhatsappListenerSender = whatsappListenerSender()
+        objwhatsappListenerSender.objwhatsappListenerLayer = self.stack.getLastLayer()
+        actm.waListener = objwhatsappListenerSender
+        
         self.stack.broadcastEvent(YowLayerEvent(YowNetworkLayer.EVENT_STATE_CONNECT))
         try:
             self.stack.loop()
@@ -71,10 +77,10 @@ class ListenerLayer(YowInterfaceLayer):
         self.toLower(entity.ack())
 
     def messageSend(self, number, content):
-         outgoingMessage = TextMessageProtocolEntity(content.encode("utf-8") if sys.version_info >= (3,0) else content, to = self.aliasToJid(number))
-         self.toLower(outgoingMessage)
+		outgoingMessage = TextMessageProtocolEntity(content.encode("utf-8") if sys.version_info >= (3,0) else content, to = self.normalizeJid(number))
+		self.toLower(outgoingMessage)
 
-    def mediaSend(self, number, path, mediaType, caption = None):
+    def mediaSend(self, number, path, mediaType = RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE, caption = None):
         jid = self.normalizeJid(number)
         entity = RequestUploadIqProtocolEntity(mediaType, filePath=path)                                            
         successFn = lambda successEntity, originalEntity: self.onRequestUploadResult(jid, mediaType, path, successEntity, originalEntity, caption)
@@ -118,3 +124,27 @@ class ListenerLayer(YowInterfaceLayer):
         with open(filename, 'wb') as f:
             f.write(message.getMediaContent())
         return filename
+        
+class whatsappListenerSender (threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        #La siguiente linea hace que cuando se cierre un thread se cierren todos
+        self.daemon = True
+        self.mutex = threading.Lock()
+        self.mutex.acquire()
+        self.start()
+        self.message = ""   
+        self.sendPhoto = False
+        objwhatsappListenerLayer = None     
+    def run(self):
+		while True:
+			self.mutex.acquire()
+			#TODO: Quedo el grupo fijo, hay que ver si es un numero o sigue un grupo a definir
+			self.objwhatsappListenerLayer.messageSend("5491162737159-1467366059", self.message)
+			if(self.sendPhoto):
+				self.objwhatsappListenerLayer.mediaSend("5491162737159-1467366059", "./images/photo.jpg")
+	
+    def sendMessage(self, message, sendPhoto = False):
+		self.mutex.release()		
+		self.message = message
+		self.sendPhoto = sendPhoto
