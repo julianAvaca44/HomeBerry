@@ -25,7 +25,7 @@ class myThread (threading.Thread):
         elif(self.type == 2):
             tb.telegramBotRun(self.db)
         elif(self.type == 3):
-            btn.buttonHandle()
+            btn.buttonHandle()#EVENTOS EXTERNOS
 
 def main():
    

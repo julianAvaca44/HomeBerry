@@ -131,20 +131,25 @@ def funcOn(command):
 				{'$set':{'estado':1}})
 			return "dispositivio encendido"
 		else:
-			return device['tipo'] + " - " + str(device['numero']) + ": se encontraba encendida"
-	elif(len(command) >= 2):
-		return "TODO: en mantenimiento"
-	#logica para comunicarse con la rasp y prender el dispositivo deseado
-	#comparar con el mapa de la casa
-	
-	
-	if(command[1] == "luces"):
-		if (GPIO.input(led[int(1)]) == False or GPIO.input(led[int(2)]) == False):
-			GPIO.output(led[1], 1)
-			GPIO.output(led[2], 1)
-			return "Luces encendidas"                
+			return device['tipo'] + " - " + str(device['numero']) + ": se encontraba encendida"	
+	elif(len(command) == 3):
+		if(command[1] == "luces"):
+			lightsDevice = db.devices.find({'tipo':'Luz','idZona':command[3]})
+		if(lightsDevice == None):
+			return "dispositivos inexistentes"	
+		#averiguo si todos los dispositivos ya estan encendidos
+		lightsDeviceOff = db.devices.find({'tipo':'Luz','idZona':command[3],'estado':0})
+		if (lightsDeviceOff == None):
+			return "Los dispositivios ya se encontraban encendidos"
+		#por el contrario enciendo el resto de dispositivos
 		else:
-			return "Luces se encontraban encendidas"
+			for deviceOff in lightsDeviceOff:
+				if (int(deviceOff['estado']) == 0):
+					GPIO.output(deviceOff['pin'], 1)	
+			db.devices.update_many({'tipo':command[1],'idZona':command[3]},
+				{'$set':{'estado':1}})
+			return "dispositivios encendidos"
+	elif(len(command) == 2):#comandos de dos terminos ej activar/encender alarma
 	elif(command[1] == "alarma"):
 		if objMotionSensor.isRunning == False:
 			objMotionSensor.active()
