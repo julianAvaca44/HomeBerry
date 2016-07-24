@@ -105,39 +105,46 @@ class lightSensor (threading.Thread):
 					waListener.sendMessage(messageToSend)
 				time.sleep(1)
 
-def acction(command):
+def acction(command,db):
 	if command == None:
 		return "No se reconoce el commando"	
 	elif command[0] in listCommand.keys(): 
-		return listCommand[command[0]](command)
+		return listCommand[command[0]](command,db)
 	else:
-		return "Comando no valido" 
+		return "Comando no valido"	
 
 		
 def funcOn(command):
-	print("funcOn")
-	if(command[1] == "luz"):
-		if(len(command)>2 and ( command[2]== "1" or command[2]== "2")):
-			if (GPIO.input(led[int(command[2])]) == False):
-				GPIO.output(led[int(command[2])], 1)
-				return "Luz " + command[2] + " encendida"
-			else:
-				return "Luz " + command[2] + " se encontraba encendida"
+	print "_____________________-_____________________"
+	print "-- funcion On --"
+	devices = db.devices.find({'tipo':command[1]})
+	if(len(command) == 4):
+		print command[1] + " - " + command[2] + " - " + command[3]
+		device = db.devices.find_one({'tipo':command[1],'numero':int(command[2]),'idZona':command[3]})		
+		#device = db.devices.find_one({'tipo':'luz','numero':1,'idZona':'Z1'})		
+		print str(int(device['estado']))
+		if(device == None):
+			return "dispositivo inexistente"
+		elif(int(device['estado']) == 0 && GPIO.input(device['pin']) == False):
+			GPIO.output(device['pin'], 1)
+			db.devices.update_one({'tipo':command[1],'numero':int(command[2]),'idZona':command[3]},
+				{'$set':{'estado':1}})
+			return "dispositivio encendido"
 		else:
-			return "Dispositivo inexistente"
-	elif(command[1] == "luces"):
+			return device['tipo'] + " - " + str(device['numero']) + ": se encontraba encendida"
+	elif(len(command) >= 2):
+		return "TODO: en mantenimiento"
+	#logica para comunicarse con la rasp y prender el dispositivo deseado
+	#comparar con el mapa de la casa
+	
+	
+	if(command[1] == "luces"):
 		if (GPIO.input(led[int(1)]) == False or GPIO.input(led[int(2)]) == False):
 			GPIO.output(led[1], 1)
 			GPIO.output(led[2], 1)
 			return "Luces encendidas"                
 		else:
 			return "Luces se encontraban encendidas"
-	elif(command[1] == "ventilador"):
-		if (GPIO.input(ventilador) == False):
-			GPIO.output(ventilador, 1)
-			return "Ventilador encendido"
-		else:
-			return "Ventilador se encontraba encendido"
 	elif(command[1] == "alarma"):
 		if objMotionSensor.isRunning == False:
 			objMotionSensor.active()

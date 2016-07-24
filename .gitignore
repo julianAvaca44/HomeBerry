@@ -3,3 +3,7 @@ constantes.py
 *.log
 */**.log
 */**.pyc
+whatsAppModule/*.pyc
+whatsAppModule/**/*.pyc
+telegramModule/botTelegram.py
+
