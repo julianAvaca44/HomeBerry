@@ -4,7 +4,9 @@
 from telegramModule import botTelegram as tb
 from whatsAppModule import whatsapp as wa
 from buttonModule import button as btn
+from pymongo import MongoClien
 import threading
+import RPi.GPIO as GPIO
 
 import time
 
