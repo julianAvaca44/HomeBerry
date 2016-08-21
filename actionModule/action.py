@@ -8,6 +8,7 @@ import RPi.GPIO as GPIO
 import os
 import Adafruit_DHT as DHT
 from gpiozero import MotionSensor
+import constantes as const
 import threading
 import time
 
@@ -21,7 +22,7 @@ tempHum = 23
 movimiento = 24
 sensorLuz = 25
 
-log.basicConfig(filename='./action.log', filemode='w', level=log.DEBUG)
+#log.basicConfig(filename='./action.log', filemode='w', level=log.DEBUG)
 
 waListener = None
 
@@ -107,15 +108,14 @@ class lightSensor (threading.Thread):
 
 def acction(command,db):
 	if command == None:
-		return "No se reconoce el commando"	
+		return const.COMMAND_UNRECOGNIZABLE	
 	elif command[0] in listCommand.keys(): 
 		return listCommand[command[0]](command,db)
 	else:
-		return "Comando no valido"	
+		return const.COMMAND_INVALID	
 
 		
 def funcOn(command):
-	print "_____________________-_____________________"
 	print "-- funcion On --"
 	devices = db.devices.find({'tipo':command[1]})
 	if(len(command) == 4):
@@ -124,104 +124,114 @@ def funcOn(command):
 		#device = db.devices.find_one({'tipo':'luz','numero':1,'idZona':'Z1'})		
 		print str(int(device['estado']))
 		if(device == None):
-			return "dispositivo inexistente"
-		elif(int(device['estado']) == 0 && GPIO.input(device['pin']) == False):
+			return const.DISP_INEXISTENTES
+		elif((int(device['estado']) == 0) & (GPIO.input(device['pin']) == False)):
 			GPIO.output(device['pin'], 1)
 			db.devices.update_one({'tipo':command[1],'numero':int(command[2]),'idZona':command[3]},
 				{'$set':{'estado':1}})
-			return "dispositivio encendido"
+			return const.DISP_ON
 		else:
 			return device['tipo'] + " - " + str(device['numero']) + ": se encontraba encendida"	
 	elif(len(command) == 3):
-		if(command[1] == "luces"):
-			lightsDevice = db.devices.find({'tipo':'Luz','idZona':command[3]})
-		if(lightsDevice == None):
-			return "dispositivos inexistentes"	
-		#averiguo si todos los dispositivos ya estan encendidos
-		lightsDeviceOff = db.devices.find({'tipo':'Luz','idZona':command[3],'estado':0})
-		if (lightsDeviceOff == None):
-			return "Los dispositivios ya se encontraban encendidos"
-		#por el contrario enciendo el resto de dispositivos
-		else:
-			for deviceOff in lightsDeviceOff:
-				if (int(deviceOff['estado']) == 0):
-					GPIO.output(deviceOff['pin'], 1)	
-			db.devices.update_many({'tipo':command[1],'idZona':command[3]},
-				{'$set':{'estado':1}})
-			return "dispositivios encendidos"
-	elif(len(command) == 2):#comandos de dos terminos ej activar/encender alarma
-	elif(command[1] == "alarma"):
-		if objMotionSensor.isRunning == False:
-			objMotionSensor.active()
-			return "Alarma activada"
-		else:
-			return "Alarma se encontraba activada"
-	elif(command[1] == "sensor"):
-		if(command[2] == "luz"):
-			if objLightSensor.isRunning == False:
-				objLightSensor.active()
-				return "Sensor de luz activo"
+		if(command[1] == const.DISP_SENSOR):
+			if(command[2] == const.DISP_LUZ):
+				if objLightSensor.isRunning == False:
+					objLightSensor.active()
+					return "Sensor de luz activo"
+				else:
+					return "Sensor de luz se encontraba activado"
 			else:
-				return "Sensor de luz se encontraba activado"
-		else:
-			return "Dispositivo inexistente"
+				return const.DISP_INEXISTENTES
+		elif(command[1] == const.DISP_LUCES):
+			lightsDevice = db.devices.find({'tipo':'Luz','idZona':command[3]})
+			if(lightsDevice == None):
+				return const.DISP_INEXISTENTES	
+			#averiguo si todos los dispositivos ya estan encendidos
+			lightsDeviceOff = db.devices.find({'tipo':'Luz','idZona':command[3],'estado':0})
+			if (lightsDeviceOff == None):
+				return "Los dispositivios ya se encontraban encendidos"
+			#por el contrario enciendo el resto de dispositivos
+			else:
+				for deviceOff in lightsDeviceOff:
+					if (int(deviceOff['estado']) == 0):
+						GPIO.output(deviceOff['pin'], 1)	
+				db.devices.update_many({'tipo':command[1],'idZona':command[3]},
+					{'$set':{'estado':1}})
+				return "dispositivios encendidos"
+	elif(len(command) == 2):#comandos de dos terminos ej activar/encender alarma
+		if(command[1] == const.DISP_ALARMA):
+			if objMotionSensor.isRunning == False:
+				objMotionSensor.active()
+				return const.DISP_ACTIVADO_ALARMA
+			else:
+				return "Alarma se encontraba activada"
 	else:
-		return "Dispositivo inexistente"
+		return const.COMMAND_INVALID
 	#logica para comunicarse con la rasp y prender el dispositivo deseado
 	#comparar con el mapa de la casa
         	
 	
 def funcOff(command):
-	print("funcOff")
-	#logica para comunicarse con la rasp y apgar el dispositivo deseado
-	#comparar con el mapa de la casa
-	if(command[1] == "luz"):
-		if(len(command)>2 and (command[2]== "1" or command[2]== "2")):
-			if (GPIO.input(led[int(command[2])])):
-				GPIO.output(led[int(command[2])], 0)
-				return "Luz " + command[2] +" apagada"
+	print "-- funcion Off --"
+	devices = db.devices.find({'tipo':command[1]})
+	if(len(command) == 4):
+		print command[1] + " - " + command[2] + " - " + command[3]
+		device = db.devices.find_one({'tipo':command[1],'numero':int(command[2]),'idZona':command[3]})		
+		#device = db.devices.find_one({'tipo':'luz','numero':1,'idZona':'Z1'})		
+		print str(int(device['estado']))
+		if(device == None):
+			return const.DISP_INEXISTENTES
+		elif(int(device['estado']) == 1 & GPIO.input(device['pin']) == True):
+			GPIO.output(device['pin'], 0)
+			db.devices.update_one({'tipo':command[1],'numero':int(command[2]),'idZona':command[3]},
+				{'$set':{'estado':0}})
+			return const.DISP_OFF
+		else:
+			return device['tipo'] + " - " + str(device['numero']) + ": se encontraba apagado"	
+	elif(len(command) == 3):
+		if(command[1] == const.DISP_SENSOR):
+			if(command[2] == const.DISP_LUZ):
+				if objLightSensor.isRunning == False:
+					objLightSensor.active()
+					return "Sensor de luz desactivado"
+				else:
+					return "Sensor de luz se encontraba desactivado"
 			else:
-				return "Luz se encontraba apagada"
-		else:
-			return "Dispositivo inexistente"                
-	elif(command[1] == "luces"):
-		if (GPIO.input(led[int(1)]) == True or GPIO.input(led[int(2)]) == True):
-			GPIO.output(led[1], 0)
-			GPIO.output(led[2], 0)
-			return "Luces apagadas"
-		else:
-			return "Luces se encontraban apagadas"
-
-	elif(command[1] == "ventilador"):
-		if (GPIO.input(ventilador)):
-			GPIO.output(ventilador, 0)
-			return "Ventilador apagado"
-		else:
-			return "Ventilador se encontraba apagado"
-		
-	elif(command[1] == "alarma"):
-		if objMotionSensor.isRunning == True:
-			objMotionSensor.deactive()
-			return "Alarma desactivada"                
-		else:
-			return "Alarma se encontraba desactivada"  
-	elif(command[1] == "sensor"):
-		if(command[2] == "luz"):
-			if objLightSensor.isRunning == True:
-				objLightSensor.deactive()
-				return "Sensor de luz apagado"
+				return const.DISP_INEXISTENTES
+		elif(command[1] == const.DISP_LUCES):
+			lightsDevice = db.devices.find({'tipo':'Luz','idZona':command[3]})
+			if(lightsDevice == None):
+				return const.DISP_INEXISTENTES	
+			#averiguo si todos los dispositivos ya estan encendidos
+			lightsDeviceOff = db.devices.find({'tipo':'Luz','idZona':command[3],'estado':0})
+			if (lightsDeviceOff == None):
+				return "Los dispositivios ya se encontraban apagados"
+			#por el contrario enciendo el resto de dispositivos
 			else:
-				return "Sensor de luz se encontraba apagado"
-		else:
-			return "Dispositivo inexistente"			              
+				for deviceOff in lightsDeviceOff:
+					if (int(deviceOff['estado']) == 1):
+						GPIO.output(deviceOff['pin'], 0)	
+				db.devices.update_many({'tipo':command[1],'idZona':command[3]},
+					{'$set':{'estado':1}})
+				return "dispositivios apagados"
+	elif(len(command) == 2):#comandos de dos terminos ej activar/encender alarma
+		if(command[1] == const.DISP_ALARMA):
+			if objMotionSensor.isRunning == True:
+				objMotionSensor.deactive()
+				return const.DISP_DESACTIVADO_ALARMA
+			else:
+				return "Alarma se encontraba desactivada"
 	else:
-		return "Dispositivo inexistente"
+		return const.COMMAND_INVALID
+	#logica para comunicarse con la rasp y prender el dispositivo deseado
+	#comparar con el mapa de la casa
 
 def funState(command):
 	print("funState")
-	#logica para comunicarse con la rasp y apgar el dispositivo deseado
-	#comparar con el mapa de la casa
-        if(command[1] == "luz"):
+	#comando state: funcion que permite concer el estado de un dispositivo
+	#tipo de comando de 3 columnas
+	#ej: estado luz 1 ---> Luz 1 encendida
+        if(command[1] == const.DISP_LUZ):
                 if(command[2]== "1" or command[2]== "2"):
                         state = GPIO.input(led[int(command[2])])
                         return "Luz " + command[2] + " " + ("encendida" if state else "apagada")
@@ -247,7 +257,7 @@ def funState(command):
         elif(command[1] == "humedad"):
                 return "Humedad: {0:0.1f} %".format(DHT.read_retry(22, tempHum)[0]) #0-humedad, 1-temperatura
         else:
-                return "Dispositivo inexistente"        
+                return const.DISP_INEXISTENTES        
 
 def funPhoto(command):
         os.system('fswebcam -q -r 320x240 -S 3 --no-banner --jpeg 50 --save ./images/photo.jpg') # uses Fswebcam to take picture
