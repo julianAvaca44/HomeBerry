@@ -1,4 +1,3 @@
-constantes.py
 *.pyc
 *.log
 */**.log
