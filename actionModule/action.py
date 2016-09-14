@@ -115,7 +115,7 @@ def acction(command,db):
 		return const.COMMAND_INVALID	
 
 		
-def funcOn(command):
+def funcOn(command,db):
 	print "-- funcion On --"
 	devices = db.devices.find({'tipo':command[1]})
 	if(len(command) == 4):
@@ -171,7 +171,7 @@ def funcOn(command):
 	#comparar con el mapa de la casa
         	
 	
-def funcOff(command):
+def funcOff(command,db):
 	print "-- funcion Off --"
 	devices = db.devices.find({'tipo':command[1]})
 	if(len(command) == 4):
@@ -226,7 +226,7 @@ def funcOff(command):
 	#logica para comunicarse con la rasp y prender el dispositivo deseado
 	#comparar con el mapa de la casa
 
-def funState(command):
+def funState(command,db):
 	print("funState")
 	#comando state: funcion que permite concer el estado de un dispositivo
 	#tipo de comando de 3 columnas
@@ -259,7 +259,7 @@ def funState(command):
         else:
                 return const.DISP_INEXISTENTES        
 
-def funPhoto(command):
+def funPhoto(command,db):
         os.system('fswebcam -q -r 320x240 -S 3 --no-banner --jpeg 50 --save ./images/photo.jpg') # uses Fswebcam to take picture
         return "photo"
 
