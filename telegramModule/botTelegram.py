@@ -49,11 +49,11 @@ class BotTelegram():
 				pass
 				#TODO:rechazar mensaje
 				#envio comando y reenvio respuesta al usuario
-				message = actm.acction(commands, self.db)
-				if(message == "photo"):
-					bot.send_photo(cId, open( './images/photo.jpg', 'rb'))
-				else:
-					bot.send_message(cId, message)               
+			message = actm.acction(commands, self.db)
+			if(message == "photo"):
+				bot.send_photo(cId, open( './images/photo.jpg', 'rb'))
+			else:
+				bot.send_message(cId, message)               
 			   
 		@bot.message_handler(content_types=['voice', 'audio'])
 		def echo_audio(message):   

@@ -20,9 +20,10 @@ import threading
 logger = logging.getLogger("yowsup-cli")
 
 class WhatsAppBot(object):
-    def __init__(self, encryptionEnabled = True):
+    def __init__(self, encryptionEnabled = True, db):
         credentials = (const.TELEFONO, const.PASSWORD) 
         stackBuilder = YowStackBuilder()
+        self.db = db
 
         self.stack = stackBuilder\
             .pushDefaultLayers(encryptionEnabled)\
@@ -31,7 +32,7 @@ class WhatsAppBot(object):
 
         self.stack.setCredentials(credentials)
 
-    def start(self):
+    def start(self,db):
         objwhatsappListenerSender = whatsappListenerSender()
         objwhatsappListenerSender.objwhatsappListenerLayer = self.stack.getLastLayer()
         actm.waListener = objwhatsappListenerSender
@@ -53,7 +54,7 @@ class ListenerLayer(YowInterfaceLayer):
  	    	print("WA " + messageProtocolEntity.getFrom(False) + " : " + messageProtocolEntity.getBody())
                 commands = am.analizarMessage(messageProtocolEntity.getBody())
                 print(commands)
-                message = actm.acction(commands)
+                message = actm.acction(commands,self.db)
                 if(message == "photo"):
                     self.mediaSend(messageProtocolEntity.getFrom(False), './images/photo.jpg', RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE)
                 else:
@@ -65,7 +66,7 @@ class ListenerLayer(YowInterfaceLayer):
 				fileOut = self.getDownloadableMediaMessageBody(messageProtocolEntity)
 				messageText = am.convertSpeechToText(fileOut)
 				commands = am.analizarMessage(messageText)
-				message = actm.acction(commands)
+				message = actm.acction(commands,self.db)
 				messageEntity = TextMessageProtocolEntity(message, to = self.normalizeJid(messageProtocolEntity.getFrom(False)))
 				self.toLower(messageEntity)
 				print 'Respuesta: %s' % message

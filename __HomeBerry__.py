@@ -21,7 +21,7 @@ class myThread (threading.Thread):
         self.db = db
     def run(self):
         if(self.type == 1):
-            wa.WhatsAppBot().start()
+            wa.WhatsAppBot().start(db)
         elif(self.type == 2):
             tb.telegramBotRun(self.db)
         elif(self.type == 3):
