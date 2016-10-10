@@ -20,10 +20,9 @@ import threading
 logger = logging.getLogger("yowsup-cli")
 
 class WhatsAppBot(object):
-    def __init__(self, encryptionEnabled = True, db):
+    def __init__(self, encryptionEnabled = True):
         credentials = (const.TELEFONO, const.PASSWORD) 
         stackBuilder = YowStackBuilder()
-        self.db = db
 
         self.stack = stackBuilder\
             .pushDefaultLayers(encryptionEnabled)\
@@ -32,7 +31,7 @@ class WhatsAppBot(object):
 
         self.stack.setCredentials(credentials)
 
-    def start(self,db):
+    def start(self, db):
         objwhatsappListenerSender = whatsappListenerSender()
         objwhatsappListenerSender.objwhatsappListenerLayer = self.stack.getLastLayer()
         actm.waListener = objwhatsappListenerSender
@@ -40,6 +39,9 @@ class WhatsAppBot(object):
         self.stack.broadcastEvent(YowLayerEvent(YowNetworkLayer.EVENT_STATE_CONNECT))
         try:
             self.stack.loop()
+        
+            objwhatsappListenerSender.prueba("PRUEBA")
+
         except AuthError as e:
             print("Authentication Error: %s" % e.message)
 
@@ -50,11 +52,15 @@ class ListenerLayer(YowInterfaceLayer):
 
     @ProtocolEntityCallback("message")
     def onMessage(self, messageProtocolEntity):
+        print("WA onMessage")
+		
+        print messageProtocolEntity.getFrom(False)
+        print messageProtocolEntity.getFrom(True)
         if messageProtocolEntity.getType() == 'text':
  	    	print("WA " + messageProtocolEntity.getFrom(False) + " : " + messageProtocolEntity.getBody())
                 commands = am.analizarMessage(messageProtocolEntity.getBody())
                 print(commands)
-                message = actm.acction(commands,self.db)
+                message = actm.acction(commands)
                 if(message == "photo"):
                     self.mediaSend(messageProtocolEntity.getFrom(False), './images/photo.jpg', RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE)
                 else:
@@ -66,7 +72,7 @@ class ListenerLayer(YowInterfaceLayer):
 				fileOut = self.getDownloadableMediaMessageBody(messageProtocolEntity)
 				messageText = am.convertSpeechToText(fileOut)
 				commands = am.analizarMessage(messageText)
-				message = actm.acction(commands,self.db)
+				message = actm.acction(commands)
 				messageEntity = TextMessageProtocolEntity(message, to = self.normalizeJid(messageProtocolEntity.getFrom(False)))
 				self.toLower(messageEntity)
 				print 'Respuesta: %s' % message
@@ -136,7 +142,10 @@ class whatsappListenerSender (threading.Thread):
         self.start()
         self.message = ""   
         self.sendPhoto = False
-        objwhatsappListenerLayer = None     
+        objwhatsappListenerLayer = None  
+
+    def prueba(self, msg):
+        self.objwhatsappListenerLayer.messageSend("5491162737159", msg) 
     def run(self):
 		while True:
 			self.mutex.acquire()

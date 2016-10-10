@@ -1,10 +1,9 @@
-
 #(comando)(dispositivo)[(numero de dispositivo)(area)|(area)|(numero de dispositivo)]
 REGEXCOMMANDS = "^\s*((\w+)\s(\w+)(\s(\w+)\s(\w+)|\s(\w+))?).*$"
-TOKEN = "207063163:AAH5GbFmvmNnNog6ZJ0QXI1ZI2KFX0rsxaI"
+TOKEN = "232824243:AAGNAqLPieu5SN92PTjGDBzWspdRdp-Slos"
 TELEFONO = "5491169368980"
-PASSWORD = "hBTEFCYv2Wc5ZtICZ4H7VReH5sk="
- 
+PASSWORD = "hpbIJQnR4DlrQYoQPOI1p7Av56w="
+
 #variables >
 DISP_LUCES = "luces"
 DISP_LUZ = "luz"
@@ -19,6 +18,8 @@ DISP_OFF_PLUS = "Dispositivos apagados"
 DISP_ACTIVADO_ALARMA = "Alarma activada"
 DISP_DESACTIVADO_ALARMA = "Alarma desactivado"
 DISP_ALARMA_DETECTAR = "Intruso detectado"
+DISP_HUMEDAD = "humedad"
+DISP_TEMPERATURA = "temperatura"
 COMMAND_ENCENDER = "enceder"
 COMMAND_APAGAR = "apagar"
 COMMAND_ACTIVAR = "activar"

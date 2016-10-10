@@ -21,7 +21,7 @@ class myThread (threading.Thread):
         self.db = db
     def run(self):
         if(self.type == 1):
-            wa.WhatsAppBot().start(db)
+            wa.WhatsAppBot().start(self.db)
         elif(self.type == 2):
             tb.telegramBotRun(self.db)
         elif(self.type == 3):
@@ -31,11 +31,11 @@ def main():
    
         try:
 			client = MongoClient()                        
-			db = client.homeBerryDB
+			db = client.HomeBerry
 			threadWhatsApp = myThread(1, db)
 			threadTelegram = myThread(2, db)
 			threadBoton = myThread(3, db)
-            
+			setupGPIO(db)
 			threadWhatsApp.start()
 			threadTelegram.start()
 			threadBoton.start()
@@ -49,13 +49,14 @@ def setupGPIO(db):
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setwarnings(False)
 	devices = db.devices.find()
-	for i in range(0, devices.count()):
-		if(devices[i]['tipo'].lower() == 'luz' or devices[i]['tipo'].lower() == 'ventilador'):
-			GPIO.setup(int(devices[i]['pin']), GPIO.OUT)
-		elif(devices[i]['tipo'].lower() == 'boton'):
-			GPIO.setup(int(devices[i]['pin']), GPIO.IN, GPIO.PUD_UP)
-		elif(devices[i]['tipo'].lower() == 'sensorluz'):
-			GPIO.setup(int(devices[i]['pin']), GPIO.IN)
+	for device in devices:
+		print device['tipo']
+		if(device['tipo'].lower() == 'luz' or device['tipo'].lower() == 'ventilador'):
+			GPIO.setup(int(device['pin']), GPIO.OUT)
+		elif(device['tipo'].lower() == 'boton'):
+			GPIO.setup(int(device['pin']), GPIO.IN, GPIO.PUD_UP)
+		elif(device['tipo'].lower() == 'sensorluz'):
+			GPIO.setup(int(device['pin']), GPIO.IN)
 
 
 if __name__ == '__main__':
