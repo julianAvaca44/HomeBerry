@@ -1,46 +1,38 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from actionModule import action as actm
+from actionModule import action
 import RPi.GPIO as GPIO
 import time
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
 
-#pin temporal
-#TODO: ESTO DEBERIA ESTAR EN UN ARCH DE CONFIGURACION QUE SE USA AL INICIO CON ACCESO A LA BASE
-led = {}
-led[1] = 4
-led[2] = 17
-botonEncenderLed1 = 27
-botonEncenderLed2 = 22
-ventilador = 18
-sensorLuz = 25
+def buttonHandle(db):
+    actm = action.action(db, None)
 
-GPIO.setup(botonEncenderLed1, GPIO.IN, GPIO.PUD_UP)
-GPIO.setup(botonEncenderLed2, GPIO.IN, GPIO.PUD_UP)
-GPIO.setup(led[1], GPIO.OUT)
-GPIO.setup(led[2], GPIO.OUT)
-GPIO.setup(ventilador, GPIO.OUT)
-GPIO.setup(sensorLuz, GPIO.IN)
-
-def buttonHandle():
+    buttons = db.devices.find({'tipo':'boton'})
+    
     while True:
-        botonPresionado = 0
+        buttonPushed = 0
+        buttonPushedZone = ""
         #GPIO.wait_for_edge(botonEncenderLed11, GPIO.RISING)
-        if (GPIO.input(botonEncenderLed1) == False):
-            botonPresionado = 1
-        elif (GPIO.input(botonEncenderLed2) == False):
-            botonPresionado = 2
+        for i in range(0, buttons.count()):
+			if(GPIO.input(int(buttons[i]['pin'])) == False):
+				buttonPushed = int(buttons[i]['numero'])
+				buttonPushedZone = buttons[i]['idZona']
+				
 
-        if(botonPresionado>0):
-            state = GPIO.input(led[botonPresionado])
+        if(buttonPushed>0):
+            device = db.devices.find_one({'tipo':'luz', 'numero':buttonPushed, 'idZona':buttonPushedZone})
+
+            state = GPIO.input(int(device['pin']))
             if(state == True):
-                commandList = ["apagar", "luz", str(botonPresionado)]
+				commandList = ["apagar", "luz", str(buttonPushed), buttonPushedZone]
             else:
-                commandList = ["encender", "luz", str(botonPresionado)]
+				commandList = ["encender", "luz", str(buttonPushed), buttonPushedZone]
             actm.acction(commandList)
             time.sleep(0.5)
         else:
             time.sleep(0.1)
+            	
+	    #buttons = db.devices.find({'tipo':'boton'})
+

@@ -26,4 +26,5 @@ COMMAND_ACTIVAR = "activar"
 COMMAND_APAGAR = "desactivar"
 COMMAND_INVALID = "comando invalido"
 COMMAND_UNRECOGNIZABLE = "No se reconoce el comando"
+COMMAND_STATES = "estado"
  
