@@ -10,6 +10,8 @@ import constantes as const
 
 
 def analizarMessage(message):
+	'''
+	#Funcion vieja
 	regex = re.compile(const.REGEXCOMMANDS)
 	reCommand = regex.findall(message)
 	#limpio el array de commandos
@@ -20,6 +22,8 @@ def analizarMessage(message):
 	if (len(commandList)>2):
 		commandList.pop(2) #elimino los matches padres
 	return commandList
+	'''
+	return message.lower().split(' ')
 
 	
 

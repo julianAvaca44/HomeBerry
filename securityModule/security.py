@@ -21,7 +21,7 @@ def checkUser(number, db):
 
 def checkUserSession(user, msg, db):
 	if ((int(time.time()) - user['ultimaSolicitudCoordenadas']) > 86400):
-		regex = re.compile(r'[0-9][0-9](;)[0-9][0-9]')				
+		regex = re.compile(r'[1-9][1-9](;)[1-9][1-9]')				
 		if(bool(regex.match(msg))):
 			values = msg.split(";",1)
 			request = user['coordSolicitadas'].split(";",1)
@@ -34,8 +34,8 @@ def checkUserSession(user, msg, db):
 				return 'Datos incorrectos. Indicar las posiciones ' + request[0] + ' y ' + request[1] + ' de la tarjeja te coordenadas separadas por ;'
 				
 		else:
-			pos1 = chr(ord('A') + randint(0,9)) + str(randint(0,9))
-			pos2 = chr(ord('A') + randint(0,9)) + str(randint(0,9))
+			pos1 = chr(ord('A') + randint(0,8)) + str(randint(1,9))
+			pos2 = chr(ord('A') + randint(0,8)) + str(randint(1,9))
 			message_to_send = 'Indicar las posiciones ' + pos1 + ' y ' + pos2 + ' de la tarjeja te coordenadas separadas por ;'
 			result = db.users.update_one({"_id":user['_id']}, {"$set":{'coordSolicitadas':pos1+';'+pos2}})
 			#print "Respuesta: " + str(user['tarjeta_coordenadas'][pos1]) + ';'+ user[pos2][request[0]]
