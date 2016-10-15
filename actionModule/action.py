@@ -63,13 +63,15 @@ class action():
 			print ("Alarma desactivada")		
 		def checkMovements(self):
 			buzzer = self.db.devices.find_one({"tipo":"buzzer"})
+			doorSensor = self.db.devices.find_one({"tipo":"sensorpuerta"})
 			pir = MotionSensor(int(self.pin))
-			#aux = 0
 			while self.isRunning:
 				time.sleep(1)
-				#aux = aux + 1
-				if pir.motion_detected:
-				#if aux > 10:
+				statusDoorSensor = False
+				if(doorSensor != None):
+					statusDoorSensor = self.actm.checkStatus(doorSensor)
+					#print "statusDoorSensor" + str(statusDoorSensor)
+				if pir.motion_detected or statusDoorSensor:
 					self.actm.funPhoto(None, self.db)
 					print("Intruso detectado")
 					
