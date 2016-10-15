@@ -51,7 +51,9 @@ def setupGPIO(db):
 	devices = db.devices.find()
 	for device in devices:
 		print device['tipo']
-		if(device['tipo'].lower() == 'luz' or device['tipo'].lower() == 'ventilador'):
+		if(device['tipo'].lower() == 'luz' 
+		          or device['tipo'].lower() == 'ventilador'
+		          or device['tipo'].lower() == 'buzzer'):
 			GPIO.setup(int(device['pin']), GPIO.OUT)
 		elif(device['tipo'].lower() == 'boton'):
 			GPIO.setup(int(device['pin']), GPIO.IN, GPIO.PUD_UP)

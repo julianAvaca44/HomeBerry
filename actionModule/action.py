@@ -62,10 +62,14 @@ class action():
 			self.isRunning = False
 			print ("Alarma desactivada")		
 		def checkMovements(self):
+			buzzer = self.db.devices.find_one({"tipo":"buzzer"})
 			pir = MotionSensor(int(self.pin))
+			aux = 0
 			while self.isRunning:
 				time.sleep(1)
-				if pir.motion_detected:
+				aux = aux + 1
+				#if pir.motion_detected:
+				if aux > 10:
 					self.actm.funPhoto(None, self.db)
 					print("Intruso detectado")
 					
@@ -87,7 +91,16 @@ class action():
 					else:
 						waListener.sendMessage("Intruso detectado", True)
 					'''
-					time.sleep(600)
+					timerBuzzer = 0
+					while self.isRunning and timerBuzzer < 200:
+						if(buzzer != None):
+							self.actm.setOnDevice(buzzer, self.db)
+							time.sleep(1)
+							self.actm.setOffDevice(buzzer, self.db)
+							time.sleep(1)
+							timerBuzzer = timerBuzzer + 2
+							
+					#time.sleep(600)
 					
 
 
