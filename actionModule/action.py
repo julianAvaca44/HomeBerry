@@ -64,12 +64,12 @@ class action():
 		def checkMovements(self):
 			buzzer = self.db.devices.find_one({"tipo":"buzzer"})
 			pir = MotionSensor(int(self.pin))
-			aux = 0
+			#aux = 0
 			while self.isRunning:
 				time.sleep(1)
-				aux = aux + 1
-				#if pir.motion_detected:
-				if aux > 10:
+				#aux = aux + 1
+				if pir.motion_detected:
+				#if aux > 10:
 					self.actm.funPhoto(None, self.db)
 					print("Intruso detectado")
 					
@@ -80,7 +80,6 @@ class action():
 							#TODO: Hacer de forma correcta este envío de mensajes!!!
 							self.actm.tele.send_message(user['telegramId'], 'Intruso detectado')
 							self.actm.tele.send_photo(user['telegramId'], open( './images/photo.jpg', 'rb'))
-					
 					'''
 					if(waListener == None):
 						print("No tiene listener de WA")
@@ -92,7 +91,7 @@ class action():
 						waListener.sendMessage("Intruso detectado", True)
 					'''
 					timerBuzzer = 0
-					while self.isRunning and timerBuzzer < 200:
+					while self.isRunning and timerBuzzer < 300:
 						if(buzzer != None):
 							self.actm.setOnDevice(buzzer, self.db)
 							time.sleep(1)
