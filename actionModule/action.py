@@ -37,6 +37,7 @@ class action():
 		if (sensor != None):
 			self.objLightSensor = self.lightSensor(sensor['_id'], self.db, self)
 	
+	
 	class motionSensor (threading.Thread):
 		def __init__(self, pin, db, actm):
 			threading.Thread.__init__(self)
@@ -176,12 +177,17 @@ class action():
 
 
 	def acction(self, command):
+		print "A"
 		if command == None:
 			return const.COMMAND_UNRECOGNIZABLE	
 		elif command[0] in self.listCommand.keys(): 
+			print "B"
 			return self.listCommand[command[0]](self, command, self.db)
+			print "C"
 		else:
 			return const.COMMAND_INVALID	
+		
+		print "Z"
 
 			
 	def funcOn(self, command, db):

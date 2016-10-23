@@ -18,10 +18,10 @@ class LocationMediaMessageProtocolEntity(MediaMessageProtocolEntity):
 
 
     def __init__(self, latitude, longitude, name, url, encoding, _id = None, _from = None, to = None, notify = None, timestamp = None, participant = None,
-            preview = None, offline = None, retry = None, description = None):
+            preview = None, offline = None, retry = None):
 
         super(LocationMediaMessageProtocolEntity, self).__init__("location", _id, _from, to, notify, timestamp, participant, preview, offline, retry)
-        self.setLocationMediaProps(latitude,longitude,name,url,encoding, description)
+        self.setLocationMediaProps(latitude,longitude,name,url,encoding)
 
     def __str__(self):
         out  = super(MediaMessageProtocolEntity, self).__str__()
@@ -30,7 +30,6 @@ class LocationMediaMessageProtocolEntity(MediaMessageProtocolEntity):
         out += "Name: %s\n" % self.name
         out += "URL: %s\n" % self.url
         out += "Encoding: %s\n" % self.encoding
-        out += "Description: %s\n" % self.description
 
         return out
 
@@ -46,16 +45,12 @@ class LocationMediaMessageProtocolEntity(MediaMessageProtocolEntity):
     def getLocationURL(self):
         return self.url
 
-    def getDescription(self):
-        return self.description
-
-    def setLocationMediaProps(self, latitude, longitude, locationName, url, encoding, description):
+    def setLocationMediaProps(self, latitude, longitude, locationName, url, encoding):
         self.latitude = str(latitude)
         self.longitude = str(longitude)
         self.name = locationName
         self.url = url
-        self.encoding = encoding
-        self.description = description
+        self.encoding= encoding
 
     def toProtocolTreeNode(self):
         node = super(LocationMediaMessageProtocolEntity, self).toProtocolTreeNode()
@@ -68,8 +63,6 @@ class LocationMediaMessageProtocolEntity(MediaMessageProtocolEntity):
             mediaNode.setAttribute("name", self.name)
         if self.url:
             mediaNode.setAttribute("url", self.url)
-        if self.description:
-            mediaNode.setAttribute("description", self.description)
             
         return node
 
@@ -83,7 +76,6 @@ class LocationMediaMessageProtocolEntity(MediaMessageProtocolEntity):
             mediaNode.getAttributeValue("longitude"),
             mediaNode.getAttributeValue("name"),
             mediaNode.getAttributeValue("url"),
-            mediaNode.getAttributeValue("encoding"),
-            mediaNode.getAttributeValue("description")
+            mediaNode.getAttributeValue("encoding")
             )
         return entity

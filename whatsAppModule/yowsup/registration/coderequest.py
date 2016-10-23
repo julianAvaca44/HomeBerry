@@ -1,11 +1,9 @@
 from whatsAppModule.yowsup.common.http.warequest import WARequest
 from whatsAppModule.yowsup.common.http.waresponseparser import JSONResponseParser
-# from whatsAppModule.yowsup.env import CURRENT_ENV
 from whatsAppModule.yowsup.common.tools import StorageTools, WATools
 from whatsAppModule.yowsup.registration.existsrequest import WAExistsRequest
-from whatsAppModule.yowsup.env import S40YowsupEnv, AndroidYowsupEnv
+from whatsAppModule.yowsup.env import YowsupEnv
 import random, hashlib, os
-CURRENT_ENV = AndroidYowsupEnv()
 
 class WACodeRequest(WARequest):
 
@@ -34,13 +32,13 @@ class WACodeRequest(WARequest):
         self.addParam("copiedrc", "1")
         self.addParam("hasinrc", "1")
         self.addParam("rcmatch", "1")
-        self.addParam("pid", os.getpid())
+        self.addParam("pid", int(random.uniform(100,9999)))
         self.addParam("rchash", hashlib.sha256(os.urandom(20)).hexdigest())
-        self.addParam("anhash", hashlib.md5(os.urandom(20)).hexdigest())
+        self.addParam("anhash", os.urandom(20))
         self.addParam("extexist", "1")
         self.addParam("extstate", "1")
 
-        self.addParam("token", CURRENT_ENV.getToken(p_in))
+        self.addParam("token", YowsupEnv.getCurrent().getToken(p_in))
 
         self.url = "v.whatsapp.net/v2/code"
 
@@ -54,6 +52,8 @@ class WACodeRequest(WARequest):
             request = WAExistsRequest(self.cc, self.p_in, self.__id)
             result = request.send()
             if result["status"] == "ok":
+                return result
+            elif result["status"] == "fail" and "reason" in result and result["reason"] == "blocked":
                 return result
 
         self.__id = WATools.generateIdentity()

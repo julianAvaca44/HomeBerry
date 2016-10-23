@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #(comando)(dispositivo)[(numero de dispositivo)(area)|(area)|(numero de dispositivo)]
 REGEXCOMMANDS = "^\s*((\w+)\s(\w+)(\s(\w+)\s(\w+)|\s(\w+))?).*$"
 TOKEN = "232824243:AAGNAqLPieu5SN92PTjGDBzWspdRdp-Slos"
@@ -27,4 +28,6 @@ COMMAND_APAGAR = "desactivar"
 COMMAND_INVALID = "comando invalido"
 COMMAND_UNRECOGNIZABLE = "No se reconoce el comando"
 COMMAND_STATES = "estado"
+ERROR_USUARIO_NO_REGISTRADO = "El teléfono no se encuentra configurado en el sistema, por favor configúrelo para poder utilizar HomeBerry"
+ERROR_USUARIO_RESTRINGIDO = "Tenés un perfil restringido para realizar esta acción"
  

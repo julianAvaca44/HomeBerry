@@ -20,7 +20,7 @@ from whatsAppModule.yowsup.layers.protocol_chatstate          import YowChatstat
 from whatsAppModule.yowsup.layers.protocol_privacy            import YowPrivacyProtocolLayer
 from whatsAppModule.yowsup.layers.protocol_profiles           import YowProfilesProtocolLayer
 from whatsAppModule.yowsup.layers.protocol_calls import YowCallsProtocolLayer
-from whatsAppModule.yowsup import env
+from whatsAppModule.yowsup.env import YowsupEnv
 from whatsAppModule.yowsup.common.constants import YowConstants
 import inspect
 try:
@@ -70,8 +70,9 @@ class YowStackBuilder(object):
 
         allLayers = coreLayers
         if axolotl:
-            from whatsAppModule.yowsup.layers.axolotl import YowAxolotlLayer
-            allLayers += (YowAxolotlLayer,)
+            from whatsAppModule.yowsup.layers.axolotl import AxolotlSendLayer, AxolotlControlLayer, AxolotlReceivelayer
+            allLayers += (AxolotlControlLayer,)
+            allLayers += (YowParallelLayer((AxolotlSendLayer, AxolotlReceivelayer)),)
 
         allLayers += (YowParallelLayer(protocolLayers),)
 
@@ -131,7 +132,7 @@ class YowStack(object):
 
         self.setProp(YowNetworkLayer.PROP_ENDPOINT, YowConstants.ENDPOINTS[random.randint(0,len(YowConstants.ENDPOINTS)-1)])
         self.setProp(YowCoderLayer.PROP_DOMAIN, YowConstants.DOMAIN)
-        self.setProp(YowCoderLayer.PROP_RESOURCE, env.CURRENT_ENV.getResource())
+        self.setProp(YowCoderLayer.PROP_RESOURCE, YowsupEnv.getCurrent().getResource())
         self._construct()
 
 
@@ -223,5 +224,5 @@ class YowStack(object):
     def getLayer(self, layerIndex):
         return self.__stackInstances[layerIndex]
 
-    def getLastLayer(self):
+    def getLayerLayer(self):
         return self.__stackInstances[len(self.__stackInstances)-1]

@@ -1,15 +1,14 @@
 from whatsAppModule.yowsup.layers import YowLayer, YowLayerEvent
 from whatsAppModule.yowsup.layers.protocol_iq.protocolentities import IqProtocolEntity
-from whatsAppModule.yowsup.layers.network import YowNetworkLayer
 from whatsAppModule.yowsup.layers.auth import YowAuthenticationProtocolLayer
-from whatsAppModule.yowsup.layers.protocol_receipts.protocolentities import OutgoingReceiptProtocolEntity
-from whatsAppModule.yowsup.layers.protocol_acks.protocolentities import IncomingAckProtocolEntity
-from whatsAppModule.yowsup.layers.axolotl.layer import YowAxolotlLayer
 from whatsAppModule.yowsup.layers.protocol_media.protocolentities.iq_requestupload import RequestUploadIqProtocolEntity
-from whatsAppModule.yowsup.layers.protocol_media.protocolentities.iq_requestupload_result import ResultRequestUploadIqProtocolEntity
 from whatsAppModule.yowsup.layers.protocol_media.mediauploader import MediaUploader
-from whatsAppModule.yowsup.layers.axolotl.layer import YowAxolotlLayer
+from whatsAppModule.yowsup.layers.network.layer import YowNetworkLayer
+from whatsAppModule.yowsup.layers.auth.protocolentities import StreamErrorProtocolEntity
+from whatsAppModule.yowsup.layers import EventCallback
 import inspect
+import logging
+logger = logging.getLogger(__name__)
 
 class ProtocolEntityCallback(object):
     def __init__(self, entityType):
@@ -22,8 +21,11 @@ class ProtocolEntityCallback(object):
 
 class YowInterfaceLayer(YowLayer):
 
+    PROP_RECONNECT_ON_STREAM_ERR = "org.openwhatsapp.yowsup.prop.interface.reconnect_on_stream_error"
+
     def __init__(self):
         super(YowInterfaceLayer, self).__init__()
+        self.reconnect = False
         self.entity_callbacks = {}
         self.iqRegistry = {}
         # self.receiptsRegistry = {}
@@ -78,6 +80,30 @@ class YowInterfaceLayer(YowLayer):
                 self.entity_callbacks[entityType](entity)
             else:
                 self.toUpper(entity)
+
+    @ProtocolEntityCallback("stream:error")
+    def onStreamError(self, streamErrorEntity):
+        logger.error(streamErrorEntity)
+        if self.getProp(self.__class__.PROP_RECONNECT_ON_STREAM_ERR, True):
+            if streamErrorEntity.getErrorType() == StreamErrorProtocolEntity.TYPE_CONFLICT:
+                logger.warn("Not reconnecting because you signed in in another location")
+            else:
+                logger.info("Initiating reconnect")
+                self.reconnect = True
+        else:
+            logger.warn("Not reconnecting because property %s is not set" % self.__class__.PROP_RECONNECT_ON_STREAM_ERR)
+        self.toUpper(streamErrorEntity)
+        self.disconnect()
+
+    @EventCallback(YowNetworkLayer.EVENT_STATE_CONNECTED)
+    def onConnected(self, yowLayerEvent):
+        self.reconnect = False
+
+    @EventCallback(YowNetworkLayer.EVENT_STATE_DISCONNECTED)
+    def onDisconnected(self, yowLayerEvent):
+        if self.reconnect:
+            self.reconnect = False
+            self.connect()
 
     def _sendMediaMessage(self, builder, success, error = None, progress = None):
         # axolotlIface = self.getLayerInterface(YowAxolotlLayer)

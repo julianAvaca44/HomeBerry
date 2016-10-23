@@ -33,7 +33,7 @@ class BotTelegram():
 					print (phone_number)
 					print (user)
 					if user == None:
-						bot.send_message(cid, 'El teléfono no se encuentra configurado en el sistema, por favor configúrelo para poder utilizar HomeBerry')
+						bot.send_message(cid, const.ERROR_USUARIO_NO_REGISTRADO)
 					else:				
 						markup = types.ReplyKeyboardHide()
 						markup.hide_keyboard = True

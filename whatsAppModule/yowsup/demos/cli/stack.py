@@ -2,8 +2,7 @@ from whatsAppModule.yowsup.stacks import  YowStackBuilder
 from .layer import YowsupCliLayer
 from whatsAppModule.yowsup.layers.auth import AuthError
 from whatsAppModule.yowsup.layers import YowLayerEvent
-from whatsAppModule.yowsup.layers.auth import YowAuthenticationProtocolLayer
-from whatsAppModule.yowsup.layers.axolotl.layer import YowAxolotlLayer
+from whatsAppModule.yowsup.layers.axolotl.props import PROP_IDENTITY_AUTOTRUST
 import sys
 
 class YowsupCliStack(object):
@@ -17,7 +16,7 @@ class YowsupCliStack(object):
 
         # self.stack.setCredentials(credentials)
         self.stack.setCredentials(credentials)
-        self.stack.setProp(YowAxolotlLayer.PROP_IDENTITY_AUTOTRUST, True)
+        self.stack.setProp(PROP_IDENTITY_AUTOTRUST, True)
 
     def start(self):
         print("Yowsup Cli client\n==================\nType /help for available commands\n")

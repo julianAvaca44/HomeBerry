@@ -1,6 +1,6 @@
 from whatsAppModule.yowsup.common.http.warequest import WARequest
 from whatsAppModule.yowsup.common.http.waresponseparser import JSONResponseParser
-from whatsAppModule.yowsup.env import CURRENT_ENV
+from whatsAppModule.yowsup.env import YowsupEnv
 import os
 
 class WAExistsRequest(WARequest):
@@ -13,7 +13,7 @@ class WAExistsRequest(WARequest):
         self.addParam("id", idx)
         self.addParam("lg", "en")
         self.addParam("lc", "GB")
-        self.addParam("token", CURRENT_ENV.getToken(p_in))
+        self.addParam("token", YowsupEnv.getCurrent().getToken(p_in))
         self.addParam("mistyped", '6')
         self.addParam('network_radio_type', '1')
         self.addParam('simnum', '1')

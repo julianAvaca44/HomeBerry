@@ -50,7 +50,7 @@ class ReadDecoder:
     def readNibble(self, data):
         _byte = self.readInt8(data)
         ignoreLastNibble = bool(_byte & 0x80)
-        size = (_byte & 0x7f);
+        size = (_byte & 0x7f)
         nrOfNibbles = size * 2 - int(ignoreLastNibble)
         dataArr = self.readArray(size, data)
         string = ''
@@ -74,7 +74,7 @@ class ReadDecoder:
             remove = 1
         size = size & 0x7F
         text = bytearray(self.readArray(size, data))
-        hexData = binascii.hexlify(text).upper()
+        hexData = binascii.hexlify(str(text) if sys.version_info < (2,7) else text).upper()
         dataSize = len(hexData)
         out = []
         if remove == 0:
@@ -239,7 +239,7 @@ class ReadDecoder:
         if size == 0 or tag is None:
             raise ValueError("nextTree sees 0 list or null tag")
 
-        attribCount = (size - 2 + size % 2)/2;
+        attribCount = (size - 2 + size % 2)/2
         attribs = self.readAttributes(attribCount, data)
         if size % 2 ==1:
             return ProtocolTreeNode(tag, attribs)
@@ -264,7 +264,7 @@ class ReadDecoder:
         else:
             nodeData = self.readString(read2, data)
 
-        if nodeData and not type(nodeData) is str:
+        if nodeData and type(nodeData) is not str:
             nodeData = "".join(map(chr, nodeData))
 
         return ProtocolTreeNode(tag, attribs, nodeChildren, nodeData)

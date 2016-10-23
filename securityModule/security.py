@@ -17,7 +17,16 @@ def checkUserProfileAcces(user, commands, db):
 		
 
 def checkUser(number, db):
-	return db.users.find_one({'nro_telefono':phone_number})
+	usr = db.users.find_one({'nro_telefono':int(number)})
+	if usr == None:
+		numberAux = number[:2] + "9" + number[2:]
+		usr = db.users.find_one({'nro_telefono':int(numberAux)})
+		if usr == None:
+			numberAux = number[:2] + number[3:]
+			usr = db.users.find_one({'nro_telefono':int(numberAux)})		
+	
+	return usr
+	
 
 def checkUserSession(user, msg, db):
 	if ((int(time.time()) - user['ultimaSolicitudCoordenadas']) > 86400):

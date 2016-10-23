@@ -33,7 +33,3 @@ class EchoLayer(YowInterfaceLayer):
 
         elif messageProtocolEntity.getMediaType() == "vcard":
             print("Echoing vcard (%s, %s) to %s" % (messageProtocolEntity.getName(), messageProtocolEntity.getCardData(), messageProtocolEntity.getFrom(False)))
-        elif messageProtocolEntity.getMediaType() == "audio":
-            print("Audio %s" % messageProtocolEntity.url)
-        else:
-            print("Desconocido")
