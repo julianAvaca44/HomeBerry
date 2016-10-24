@@ -5,4 +5,6 @@
 whatsAppModule/*.pyc
 whatsAppModule/**/*.pyc
 telegramModule/botTelegram.py
+*/**.oga
+*/**.wav
 
