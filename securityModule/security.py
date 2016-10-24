@@ -17,16 +17,16 @@ def checkUserProfileAcces(user, commands, db):
 		
 
 def checkUser(number, db):
-	usr = db.users.find_one({'nro_telefono':int(number)})
+	print "checkUser"
+	usr = db.users.find_one({const.MONOGO_TELEFONO:int(number)})
 	if usr == None:
 		numberAux = number[:2] + "9" + number[2:]
-		usr = db.users.find_one({'nro_telefono':int(numberAux)})
+		usr = db.users.find_one({const.MONOGO_TELEFONO:int(numberAux)})
 		if usr == None:
 			numberAux = number[:2] + number[3:]
-			usr = db.users.find_one({'nro_telefono':int(numberAux)})		
-	
+			usr = db.users.find_one({const.MONOGO_TELEFONO:int(numberAux)})		
 	return usr
-	
+
 
 def checkUserSession(user, msg, db):
 	if ((int(time.time()) - user['ultimaSolicitudCoordenadas']) > 86400):
@@ -34,7 +34,8 @@ def checkUserSession(user, msg, db):
 		if(bool(regex.match(msg))):
 			values = msg.split(";",1)
 			request = user['coordSolicitadas'].split(";",1)
-			if(user['tarjeta_coordenadas'][request[0]] == int(values[0]) and user['tarjeta_coordenadas'][request[1]] == int(values[1])):
+			print user['tc']
+			if(user[const.MONOGO_TARJETA_COORDENADAS]['values'][request[0]] == int(values[0]) and user[const.MONOGO_TARJETA_COORDENADAS]['values'][request[1]] == int(values[1])):
 				result = db.users.update_one({"_id":user['_id']}, {"$set":{'ultimaSolicitudCoordenadas':int(time.time()),
 																		   'coordSolicitadas':''}})
 				return 'Comprobación realizada correctamente. Ingrese comando'
@@ -72,7 +73,7 @@ def getNewCoordinatesCard(number, db):
 						
 		result = db.users.update_one({"_id":user['_id']},
 							 {"$set":
-							  {"tarjeta_coordenadas":{
+							  {const.MONOGO_TARJETA_COORDENADAS.values:{
 								"A1":coordinatesCard["A1"],
 								"A2":coordinatesCard["A2"],
 								"A3":coordinatesCard["A3"],

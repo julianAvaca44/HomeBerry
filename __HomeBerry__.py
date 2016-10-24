@@ -8,7 +8,7 @@ from buttonModule import button as btn
 from pymongo import MongoClient
 import threading
 import RPi.GPIO as GPIO
-
+import constantes as const
 import time
 
 
@@ -31,7 +31,7 @@ def main():
    
         try:
 			client = MongoClient()                        
-			db = client.HomeBerry
+			db = client.homeBerryDB
 			threadWhatsApp = myThread(1, db)
 			threadTelegram = myThread(2, db)
 			threadBoton = myThread(3, db)
@@ -50,15 +50,15 @@ def setupGPIO(db):
 	GPIO.setwarnings(False)
 	devices = db.devices.find()
 	for device in devices:
-		print device['tipo']
-		if(device['tipo'].lower() == 'luz' 
-		          or device['tipo'].lower() == 'ventilador'
-		          or device['tipo'].lower() == 'buzzer'):
+		print device[const.MONOGO_TIPO]
+		if(device[const.MONOGO_TIPO].lower() == 'luz' 
+		          or device[const.MONOGO_TIPO].lower() == 'ventilador'
+		          or device[const.MONOGO_TIPO].lower() == 'buzzer'):
 			GPIO.setup(int(device['pin']), GPIO.OUT)
-		elif(device['tipo'].lower() == 'boton'):
+		elif(device[const.MONOGO_TIPO].lower() == 'boton'):
 			GPIO.setup(int(device['pin']), GPIO.IN, GPIO.PUD_UP)
-		elif(device['tipo'].lower() == 'sensorluz' 
-		          or device['tipo'].lower() == 'sensorpuerta'):
+		elif(device[const.MONOGO_TIPO].lower() == 'sensorluz' 
+		          or device[const.MONOGO_TIPO].lower() == 'sensorpuerta'):
 			GPIO.setup(int(device['pin']), GPIO.IN)
 
 if __name__ == '__main__':

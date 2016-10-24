@@ -29,7 +29,8 @@ class BotTelegram():
 				if message.content_type == 'contact':
 					cid = message.chat.id # Almacenaremos el ID de la conversación.
 					phone_number = int(message.contact.phone_number)
-					user = self.db.users.find_one({'nro_telefono':phone_number})
+					print (self.db)
+					user = self.db.users.find_one({const.MONOGO_TELEFONO:str(phone_number)})
 					print (phone_number)
 					print (user)
 					if user == None:

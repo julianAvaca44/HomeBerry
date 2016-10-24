@@ -192,88 +192,92 @@ class action():
 			
 	def funcOn(self, command, db):
 		print "-- funcion On --"
-		if(command[1] == const.COMMAND_STATES):
-			stateMsg = command[2]
-			i = 3
-			while i < len(command):
-				stateMsg = stateMsg + " " + command[i]
-				i = i +1
-			print "estado: " + stateMsg
-			state = db.states.find_one({"nombre":stateMsg})
-			if(state != None):
-				for deviceState in state['devices']:
-					if(deviceState['idDevice'] == const.DISP_ALARMA):
-						if (deviceState['state'] == 0 and self.objMotionSensor.isRunning == True):
-							self.objMotionSensor.deactive()
-							print "alarma desactivada"
-						elif (deviceState['state'] == 1 and self.objMotionSensor.isRunning == False):
-							self.objMotionSensor.active()
-							print "alarma activada"
-					else:
-						device = self.db.devices.find_one({"_id":deviceState['idDevice']})
-						if(device != None):
-							if(deviceState['state'] == 1):
-								self.setOnDevice(device, db)
-							else:
-								self.setOffDevice(device, db)
-				return "Estado iniciado"
-			else:
-				return "Estado inexistente"
-		else:
-			if(len(command) == 4):
-				print command[1] + " - " + command[2] + " - " + command[3]
-				device = db.devices.find_one({'tipo':command[1],'numero':int(command[2]),'idZona':command[3]})		
-				if(device == None):
-					return const.DISP_INEXISTENTES
-				elif(self.checkStatus(device) == 0):
-					self.setOnDevice(device, db)
-					return const.DISP_ON
-				else:
-					return device['tipo'] + " - " + str(device['numero']) + ": se encontraba encendida"	
-			elif(len(command) == 3):
-				if(command[1] == const.DISP_SENSOR):
-					if(command[2] == const.DISP_LUZ):
-						if self.objLightSensor.isRunning == False:
-							self.objLightSensor.active()
-							return "Sensor de luz activo"
+		try:
+			if(command[1] == const.COMMAND_STATES):
+				stateMsg = command[2]
+				i = 3
+				while i < len(command):
+					stateMsg = stateMsg + " " + command[i]
+					i = i +1
+				print "estado: " + stateMsg
+				state = db.states.find_one({"nombre":stateMsg})
+				if(state != None):
+					print "A"
+					for deviceState in state['dispositivos']:
+						if(deviceState['id'] == const.DISP_ALARMA):
+							if (deviceState['estado'] == 0 and self.objMotionSensor.isRunning == True):
+								self.objMotionSensor.deactive()
+								print "alarma desactivada"
+							elif (deviceState['estado'] == 1 and self.objMotionSensor.isRunning == False):
+								self.objMotionSensor.active()
+								print "alarma activada"
 						else:
-							return "Sensor de luz se encontraba activado"
-					else:
-						return const.DISP_INEXISTENTES	
-				elif(command[1] == const.DISP_LUCES):
-					lightsDevice = db.devices.find({'tipo':'luz','idZona':command[2]})
-					if(lightsDevice == None):
-						return const.DISP_INEXISTENTES	
-					#averiguo si todos los dispositivos ya estan encendidos
-					lightsDeviceOff = db.devices.find({'tipo':'luz','idZona':command[2],'estado':0})
-					if (lightsDeviceOff == None):
-						return "Los dispositivios ya se encontraban encendidos"
-					#por el contrario enciendo el resto de dispositivos
-					else:
-						for deviceOff in lightsDeviceOff:
-							self.setOnDevice(deviceOff, db)
-							return "dispositivios encendidos"
-				elif(command[1] == const.DISP_VENTILADOR):
-					device = db.devices.find_one({'tipo':command[1],'idZona':command[2]})		
+							device = self.db.devices.find_one({"_id":deviceState['estado']})
+							if(device != None):
+								if(deviceState['estado'] == 1):
+									self.setOnDevice(device, db)
+								else:
+									self.setOffDevice(device, db)
+					return "Estado iniciado"
+				else:
+					return "Estado inexistente"
+			else:
+				if(len(command) == 4):
+					print command[1] + " - " + command[2] + " - " + command[3]
+					device = db.devices.find_one({'tipo':command[1],'numero':int(command[2]),'idZona':command[3]})		
 					if(device == None):
 						return const.DISP_INEXISTENTES
 					elif(self.checkStatus(device) == 0):
 						self.setOnDevice(device, db)
-						return "Ventildor encendido"
+						return const.DISP_ON
 					else:
-						return "El ventilador se encontraba encendido"
-				
-			elif(len(command) == 2):#comandos de dos terminos ej activar/encender alarma
-				if(command[1] == const.DISP_ALARMA):
-					if self.objMotionSensor.isRunning == False:
-						self.objMotionSensor.active()
-						return const.DISP_ACTIVADO_ALARMA
-					else:
-						return "Alarma se encontraba activada"
-			else:
-				return const.COMMAND_INVALID
-			#logica para comunicarse con la rasp y prender el dispositivo deseado
-			#comparar con el mapa de la casa
+						return device['tipo'] + " - " + str(device['numero']) + ": se encontraba encendida"	
+				elif(len(command) == 3):
+					if(command[1] == const.DISP_SENSOR):
+						if(command[2] == const.DISP_LUZ):
+							if self.objLightSensor.isRunning == False:
+								self.objLightSensor.active()
+								return "Sensor de luz activo"
+							else:
+								return "Sensor de luz se encontraba activado"
+						else:
+							return const.DISP_INEXISTENTES	
+					elif(command[1] == const.DISP_LUCES):
+						lightsDevice = db.devices.find({'tipo':'luz','idZona':command[2]})
+						if(lightsDevice == None):
+							return const.DISP_INEXISTENTES	
+						#averiguo si todos los dispositivos ya estan encendidos
+						lightsDeviceOff = db.devices.find({'tipo':'luz','idZona':command[2],'estado':0})
+						if (lightsDeviceOff == None):
+							return "Los dispositivios ya se encontraban encendidos"
+						#por el contrario enciendo el resto de dispositivos
+						else:
+							for deviceOff in lightsDeviceOff:
+								self.setOnDevice(deviceOff, db)
+								return "dispositivios encendidos"
+					elif(command[1] == const.DISP_VENTILADOR):
+						device = db.devices.find_one({'tipo':command[1],'idZona':command[2]})		
+						if(device == None):
+							return const.DISP_INEXISTENTES
+						elif(self.checkStatus(device) == 0):
+							self.setOnDevice(device, db)
+							return "Ventildor encendido"
+						else:
+							return "El ventilador se encontraba encendido"
+					
+				elif(len(command) == 2):#comandos de dos terminos ej activar/encender alarma
+					if(command[1] == const.DISP_ALARMA):
+						if self.objMotionSensor.isRunning == False:
+							self.objMotionSensor.active()
+							return const.DISP_ACTIVADO_ALARMA
+						else:
+							return "Alarma se encontraba activada"
+				else:
+					return const.COMMAND_INVALID
+				#logica para comunicarse con la rasp y prender el dispositivo deseado
+				#comparar con el mapa de la casa
+		except:
+			pass
 				
 		
 	def funcOff(self, command,db):
