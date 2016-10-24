@@ -7,4 +7,4 @@ whatsAppModule/**/*.pyc
 telegramModule/botTelegram.py
 */**.oga
 */**.wav
-
+audio/*
