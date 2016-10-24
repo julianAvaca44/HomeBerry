@@ -18,13 +18,22 @@ def checkUserProfileAcces(user, commands, db):
 
 def checkUser(number, db):
 	print "checkUser"
+	print number
 	usr = db.users.find_one({const.MONOGO_TELEFONO:int(number)})
 	if usr == None:
 		numberAux = number[:2] + "9" + number[2:]
 		usr = db.users.find_one({const.MONOGO_TELEFONO:int(numberAux)})
 		if usr == None:
 			numberAux = number[:2] + number[3:]
-			usr = db.users.find_one({const.MONOGO_TELEFONO:int(numberAux)})		
+			usr = db.users.find_one({const.MONOGO_TELEFONO:int(numberAux)})	
+			if usr == None:
+				usr = db.users.find_one({const.MONOGO_TELEFONO:number})
+				if usr == None:
+					numberAux = number[:2] + "9" + number[2:]
+					usr = db.users.find_one({const.MONOGO_TELEFONO:numberAux})
+					if usr == None:
+						numberAux = number[:2] + number[3:]
+						usr = db.users.find_one({const.MONOGO_TELEFONO:numberAux})
 	return usr
 	
 def checkUserTelegram(telegramId, db):

@@ -212,7 +212,6 @@ class whatsappListenerSender (threading.Thread):
 		objwhatsappListenerLayer = None  
 
 	def prueba(self, msg):
-		print "AA"
 		self.objwhatsappListenerLayer.messageSend("5491162737159", msg) 
 	def run(self):
 		while True:

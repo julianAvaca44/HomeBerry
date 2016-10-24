@@ -374,6 +374,7 @@ class action():
 					return device['tipo'] + " de " + command[2] + " " + ("encendido" if self.checkStatus(device) else "apagado")
 
 			elif(command[1] == const.DISP_HUMEDAD):
+				print "sensor humedad"
 				device = db.devices.find_one({'tipo':'sensortemphum','idZona':command[2]})
 				if(device == None):
 					print "Dispositivo no configurado"
@@ -381,6 +382,7 @@ class action():
 				else:
 					return "Humedad en " + command[2] + ":  {0:0.1f} %".format(DHT.read_retry(22, int(device['pin']))[0]) #0-humedad, 1-temperatura								
 			elif(command[1] == const.DISP_TEMPERATURA):
+				print "sensor temperatura"
 				device = db.devices.find_one({'tipo':'sensortemphum','idZona':command[2]})
 				if(device == None):
 					print "Dispositivo no configurado"
