@@ -29,8 +29,7 @@ class BotTelegram():
 				if message.content_type == 'contact':
 					cid = message.chat.id # Almacenaremos el ID de la conversación.
 					phone_number = int(message.contact.phone_number)
-					print (self.db)
-					user = self.db.users.find_one({const.MONOGO_TELEFONO:str(phone_number)})
+					user = sec.checkUser(phone_number)
 					print (phone_number)
 					print (user)
 					if user == None:
@@ -50,7 +49,7 @@ class BotTelegram():
 			cId = message.chat.id
 			
 			#Verifico que existe el usuario registrado 
-			user = self.db.users.find_one({'telegramId':cId})
+			user = sec.checkUserTelegram(cId, self.db)
 			if user != None:
 				msg = message.text
 				print (int(time.time()) - user['ultimaSolicitudCoordenadas'])

@@ -198,6 +198,11 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
         elif m.HasField("image_message"):
             handled = True
             self.handleImageMessage(node, m.image_message)
+        else:
+			print "A"
+			print m
+			print serializedData
+			print "A"
 
         if not handled:
             print(m)

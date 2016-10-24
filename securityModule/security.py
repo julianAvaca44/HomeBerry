@@ -26,8 +26,10 @@ def checkUser(number, db):
 			numberAux = number[:2] + number[3:]
 			usr = db.users.find_one({const.MONOGO_TELEFONO:int(numberAux)})		
 	return usr
-
-
+	
+def checkUserTelegram(telegramId, db):
+	return db.users.find_one({'telegramId':telegramId})
+	
 def checkUserSession(user, msg, db):
 	if ((int(time.time()) - user['ultimaSolicitudCoordenadas']) > 86400):
 		regex = re.compile(r'[1-9][1-9](;)[1-9][1-9]')				

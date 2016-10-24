@@ -84,16 +84,16 @@ class action():
 							#TODO: Hacer de forma correcta este envío de mensajes!!!
 							self.actm.tele.send_message(user['telegramId'], 'Intruso detectado')
 							self.actm.tele.send_photo(user['telegramId'], open( './images/photo.jpg', 'rb'))
-					'''
-					if(waListener == None):
+					
+					if(waListener != None):
+						waListener.sendMessage("Intruso detectado", True)
+					else:
 						print("No tiene listener de WA")
 						try:
 							waListener.sendMessage("Intruso detectado", True)	
 						except:
-							print("De verdad no tiene listener")
-					else:
-						waListener.sendMessage("Intruso detectado", True)
-					'''
+							print("De verdad no tiene listener")						
+					
 					timerBuzzer = 0
 					while self.isRunning and timerBuzzer < 300:
 						if(buzzer != None):
@@ -178,17 +178,12 @@ class action():
 
 
 	def acction(self, command):
-		print "A"
 		if command == None:
 			return const.COMMAND_UNRECOGNIZABLE	
 		elif command[0] in self.listCommand.keys(): 
-			print "B"
 			return self.listCommand[command[0]](self, command, self.db)
-			print "C"
 		else:
 			return const.COMMAND_INVALID	
-		
-		print "Z"
 
 			
 	def funcOn(self, command, db):
@@ -440,8 +435,8 @@ class action():
 
 	def funPhoto(self, command,db):
 			#os.system('fswebcam -q -r 320x240 -S 3 --no-banner --jpeg 50 --save ./images/photo.jpg') # uses Fswebcam to take picture
-			os.system('LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libv4l/v4l1compat.so fswebcam -q -r 320x240 -S 3 --no-banner -F 10 --save test.jpeg')
-
+			os.system('LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libv4l/v4l1compat.so fswebcam -q -r 320x240 -S 3 --no-banner -F 10 --save ./images/photo.jpg')
+			print "Foto"
 			return "photo"
 		
 	def funOpen(self, command,db):

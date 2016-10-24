@@ -42,11 +42,16 @@ class WhatsAppBot(object):
 
 		#actm.waListener = objwhatsappListenerSender
 		self.stack.broadcastEvent(YowLayerEvent(YowNetworkLayer.EVENT_STATE_CONNECT))
-		try:
-			self.stack.loop()
+		
+		while True:
+			try:
+				self.stack.loop()
 
-		except AuthError as e:
-			print("Authentication Error: %s" % e.message)
+			except AuthError as e:
+				print("Authentication Error: %s" % e.message)
+			#except:				
+			#	print "ERROR"
+			#	#pass
 
 		  
 
@@ -88,31 +93,33 @@ class ListenerLayer(YowInterfaceLayer):
 						commands = am.analizarMessage(messageProtocolEntity.getBody())
 						print(commands)
               
-					'''
-					elif messageProtocolEntity.getType() == "media":
-						if messageProtocolEntity.getMediaType() in ("audio"):
-							fileOut = self.getDownloadableMediaMessageBody(messageProtocolEntity)
-							messageText = am.convertSpeechToText(fileOut)
-							commands = am.analizarMessage(messageText)
-							message = actm.acction(commands)
-							messageEntity = TextMessageProtocolEntity(message, to = self.normalizeJid(messageProtocolEntity.getFrom(False)))
-							self.toLower(messageEntity)
-							print 'Respuesta: %s' % message					
-					'''
-					print("commads: ")
-					if(sec.checkUserProfileAcces(user, commands, self.db)):
-						message = self.actm.acction(commands)
-						if(message == "photo"):
-							self.mediaSend(messageProtocolEntity.getFrom(False), './images/photo.jpg', RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE)
+						'''
+						elif messageProtocolEntity.getType() == "media":
+							if messageProtocolEntity.getMediaType() in ("audio"):
+								fileOut = self.getDownloadableMediaMessageBody(messageProtocolEntity)
+								messageText = am.convertSpeechToText(fileOut)
+								commands = am.analizarMessage(messageText)
+								message = actm.acction(commands)
+								messageEntity = TextMessageProtocolEntity(message, to = self.normalizeJid(messageProtocolEntity.getFrom(False)))
+								self.toLower(messageEntity)
+								print 'Respuesta: %s' % message					
+						'''
+						print("commads: ")
+						if(sec.checkUserProfileAcces(user, commands, self.db)):
+							message = self.actm.acction(commands)
+							if(message == "photo"):
+								self.mediaSend(messageProtocolEntity.getFrom(False), './images/photo.jpg', RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE)
+							else:
+								messageProtocolEntity.setBody(message)
+								self.toLower(messageProtocolEntity.forward(messageProtocolEntity.getFrom()))
+								self.toLower(messageProtocolEntity.ack()) 
 						else:
-							messageProtocolEntity.setBody(message)
+							messageProtocolEntity.setBody(const.ERROR_USUARIO_RESTRINGIDO)
 							self.toLower(messageProtocolEntity.forward(messageProtocolEntity.getFrom()))
-							self.toLower(messageProtocolEntity.ack()) 
+							self.toLower(messageProtocolEntity.ack()) 						
+						#print message
 					else:
-						messageProtocolEntity.setBody(const.ERROR_USUARIO_RESTRINGIDO)
-						self.toLower(messageProtocolEntity.forward(messageProtocolEntity.getFrom()))
-						self.toLower(messageProtocolEntity.ack()) 						
-					#print message
+						print "NO ES TEXTO"
 					
 				else:
 					pass
