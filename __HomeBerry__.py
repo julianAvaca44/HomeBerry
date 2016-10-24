@@ -48,6 +48,9 @@ def main():
 def setupGPIO(db):
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setwarnings(False)
+	GPIO.setup(int('13'),GPIO.OUT)
+	GPIO.setup(int('19'),GPIO.OUT)
+	GPIO.setup(int('26'),GPIO.OUT)
 	devices = db.devices.find()
 	for device in devices:
 		print device[const.MONOGO_TIPO]

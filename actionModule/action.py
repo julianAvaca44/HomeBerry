@@ -14,6 +14,7 @@ from gpiozero import MotionSensor
 import constantes as const
 import threading
 import time
+from time import sleep
 import re
 import urllib2
 
@@ -442,9 +443,42 @@ class action():
 			os.system('LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libv4l/v4l1compat.so fswebcam -q -r 320x240 -S 3 --no-banner -F 10 --save test.jpeg')
 
 			return "photo"
+		
+	def funOpen(self, command,db):
+		#check command 2 si existe en mongo
+		#traer device de commando 2
+		#y setear sus pines con lo valores correspondientes
+		if command[1] == 'porton':
+			if GPIO.input(13) == 0:
+				return 'El porton esta abierto'
+			else:
+				print "Going forwards"
+				GPIO.output(13,0)
+				GPIO.output(19,1)
+				GPIO.output(26,1)
+		 
+				sleep(1.4)
+				print "Now stop"
+				#los fines de carrera que funciona como el pulsador deben ejecutr esta linea
+				GPIO.output(26,GPIO.LOW)
+				return "Porton abierto..."
 			
-
-
+	def funClose(self, command,db):
+		if command[1] == 'porton':
+			if GPIO.input(13) == 1:
+				return 'El porton esta cerrado'
+			else:
+				print "Going backwards"
+				print GPIO.input(13)
+				GPIO.output(13,1)
+				GPIO.output(19,0)
+				GPIO.output(26,1)
+		 
+				sleep(1.5)
+				print "Now stop"
+				GPIO.output(26,GPIO.LOW)
+				return "Porton Cerrado..."
+			
 
 	listCommand = {
 		'encender': funcOn,
@@ -453,7 +487,9 @@ class action():
 		'desactivar': funcOff,
 		'estado': funState,
 		'consultar': funState,	
-		'foto': funPhoto
+		'foto': funPhoto,
+		'abrir':funOpen,
+		'cerrar':funClose
 	}
 
 
