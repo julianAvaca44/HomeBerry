@@ -53,7 +53,7 @@ def setupGPIO(db):
 	GPIO.setup(int('26'),GPIO.OUT)
 	devices = db.devices.find()
 	for device in devices:
-		print device[const.MONOGO_TIPO]
+		print device[const.MONOGO_TIPO] + ' ' + device['idZona']
 		if(device[const.MONOGO_TIPO].lower() == 'luz' 
 		          or device[const.MONOGO_TIPO].lower() == 'ventilador'
 		          or device[const.MONOGO_TIPO].lower() == 'buzzer'):

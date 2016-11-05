@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 #objetivo del messeage analizador es parsear un mensaje sea 
 #en formato de audio, texto, imagenes o algun otro soporte y parsear lo a un comando posible
 #en caso que no se pueda resolver el parseo informar que no se pudo comprender el mensaje
@@ -23,7 +23,17 @@ def analizarMessage(message):
 		commandList.pop(2) #elimino los matches padres
 	return commandList
 	'''
-	return message.lower().split(' ')
+	messaOut = message.lower().split(' ')
+	
+	cantCommand = len(messaOut)
+	print cantCommand
+	for x in range(0, cantCommand):
+		#print messaOut[x]
+		if(len(messaOut[x]) == 10 and messaOut[x][:8] == "habitaci"):
+			#print "ACENTO"
+			messaOut[x] = 'habitacion'
+
+	return messaOut
 
 	
 

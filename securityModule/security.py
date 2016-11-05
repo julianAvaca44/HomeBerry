@@ -26,14 +26,14 @@ def checkUser(number, db):
 		if usr == None:
 			numberAux = number[:2] + number[3:]
 			usr = db.users.find_one({const.MONOGO_TELEFONO:int(numberAux)})	
-			if usr == None:
+			if usr == None:	
 				usr = db.users.find_one({const.MONOGO_TELEFONO:number})
 				if usr == None:
 					numberAux = number[:2] + "9" + number[2:]
 					usr = db.users.find_one({const.MONOGO_TELEFONO:numberAux})
 					if usr == None:
 						numberAux = number[:2] + number[3:]
-						usr = db.users.find_one({const.MONOGO_TELEFONO:numberAux})
+						usr = db.users.find_one({const.MONOGO_TELEFONO:numberAux})					
 	return usr
 	
 def checkUserTelegram(telegramId, db):
@@ -52,7 +52,7 @@ def checkUserSession(user, msg, db):
 				return 'Comprobación realizada correctamente. Ingrese comando'
 																				
 			else:
-				return 'Datos incorrectos. Indicar las posiciones ' + request[0] + ' y ' + request[1] + ' de la tarjeja te coordenadas separadas por ;'
+				return 'Datos incorrectos. Indicar las posiciones ' + request[0] + ' y ' + request[1] + ' de la tarjeta de coordenadas separadas por ;'
 				
 		else:
 			pos1 = chr(ord('A') + randint(0,8)) + str(randint(1,9))
@@ -65,7 +65,7 @@ def checkUserSession(user, msg, db):
 		return 'OK'
 
 def getNewCoordinatesCard(number, db):
-	user = checkUser(number)
+	user = checkUser(number, db)
 	if(user <> None):
 		coordinatesCard={'A1':0}
 		for i in range(1, 10):
@@ -84,7 +84,7 @@ def getNewCoordinatesCard(number, db):
 						
 		result = db.users.update_one({"_id":user['_id']},
 							 {"$set":
-							  {const.MONOGO_TARJETA_COORDENADAS.values:{
+							  {const.MONOGO_TARJETA_COORDENADAS .values:{
 								"A1":coordinatesCard["A1"],
 								"A2":coordinatesCard["A2"],
 								"A3":coordinatesCard["A3"],

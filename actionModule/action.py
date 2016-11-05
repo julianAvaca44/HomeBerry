@@ -25,22 +25,29 @@ import urllib2
 class action():
 
 	tele = object
+	waListener = None
+    
+	def setWAListener(self, waListener):
+		self.waListener = waListener
 	
 	def __init__(self, db, teleBot):
 		self.db = db
 		self.teleBot = teleBot
 		
+		self.objSenderMessage = self.senderMessage(self.db, self)
+		
 		#TODO: ver la posibilidad de varios sensores de cada tipo
 		sensor = self.db.devices.find_one({'tipo':'sensormovimiento'})
 		if (sensor != None):
-			self.objMotionSensor = self.motionSensor(sensor['pin'], self.db, self)
+			self.objMotionSensor = self.motionSensor(sensor['pin'], self.db, self, self.objSenderMessage)
 		sensor = self.db.devices.find_one({'tipo':'sensorluz'})
 		if (sensor != None):
 			self.objLightSensor = self.lightSensor(sensor['_id'], self.db, self)
+		
 	
 	
 	class motionSensor (threading.Thread):
-		def __init__(self, pin, db, actm):
+		def __init__(self, pin, db, actm, objSenderMessage):
 			threading.Thread.__init__(self)
 			#La siguiente linea hace que cuando se cierre un thread se cierren todos
 			self.daemon = True
@@ -48,6 +55,7 @@ class action():
 			self.db = db
 			self.actm = actm
 			self.pin = pin
+			self.objSenderMessage = objSenderMessage
 			self.mutex = threading.Lock()
 			self.mutex.acquire()
 			self.start()
@@ -58,7 +66,7 @@ class action():
 				self.checkMovements()
 		def active(self):
 			self.isRunning = True
-			self.mutex.release()		
+			self.mutex.release()
 			print ("Alarma activada")
 		def deactive(self):
 			self.isRunning = False
@@ -70,37 +78,38 @@ class action():
 			while self.isRunning:
 				time.sleep(1)
 				statusDoorSensor = False
+				print time.time()
 				if(doorSensor != None):
 					statusDoorSensor = self.actm.checkStatus(doorSensor)
+					print statusDoorSensor
 					#print "statusDoorSensor" + str(statusDoorSensor)
+				
 				if pir.motion_detected or statusDoorSensor:
 					self.actm.funPhoto(None, self.db)
 					print("Intruso detectado")
-					
-					if(self.actm.teleBot != None):
-						users = self.db.users.find({"perfil":"adulto"})
-						for user in users:
-							#self.actm.teleBot.send_msg(user['telegramId'], 'Intruso detectado', False)
-							#TODO: Hacer de forma correcta este envío de mensajes!!!
-							self.actm.tele.send_message(user['telegramId'], 'Intruso detectado')
-							self.actm.tele.send_photo(user['telegramId'], open( './images/photo.jpg', 'rb'))
-					
-					if(waListener != None):
-						waListener.sendMessage("Intruso detectado", True)
-					else:
-						print("No tiene listener de WA")
-						try:
-							waListener.sendMessage("Intruso detectado", True)	
-						except:
-							print("De verdad no tiene listener")						
+					#if(self.actm.teleBot != None):
+					self.objSenderMessage.prepareMessage("Intruso detectado", None, "adulto")
+					self.objSenderMessage.prepareMessage("photo", None, "adulto")
+
+					'''
+					for user in users:
+						if(self.actm.waListener == None):
+							print("No tiene listener de WA")
+							try:
+								self.actm.waListener.sendMessage(user[const.MONOGO_TELEFONO], "Intruso detectado", True)	
+							except:
+								print("De verdad no tiene listener")
+						else:
+							self.actm.waListener.sendMessage(user[const.MONOGO_TELEFONO],"Intruso detectado", True)
+					'''
 					
 					timerBuzzer = 0
 					while self.isRunning and timerBuzzer < 300:
 						if(buzzer != None):
 							self.actm.setOnDevice(buzzer, self.db)
-							time.sleep(1)
+							time.sleep(0.5)
 							self.actm.setOffDevice(buzzer, self.db)
-							time.sleep(1)
+							time.sleep(0.5)
 							timerBuzzer = timerBuzzer + 2
 							
 					#time.sleep(600)
@@ -146,7 +155,59 @@ class action():
 						self.actm.setOffDevice(device, self.db)
 						print 'Apagando Luz'
 				time.sleep(1)
+
 		
+	class senderMessage (threading.Thread):
+		def __init__(self, db, actm):
+			threading.Thread.__init__(self)
+			#La siguiente linea hace que cuando se cierre un thread se cierren todos
+			self.messageToSend = []
+			self.number = []
+			self.daemon = True
+			self.db = db
+			self.actm = actm
+			self.mutex = threading.Lock()
+			self.mutex.acquire()
+
+			self.start()
+
+		def run(self):
+			while True:
+				print "A-Sender"
+				self.mutex.acquire()
+				while len(self.messageToSend) > 0:
+					while len(self.number[0]):
+						self.sendMessage(self.messageToSend[0],self.number[0][0])
+						self.number[0].pop(0)
+					self.number.pop(0)
+					self.messageToSend.pop(0)
+		
+		def prepareMessage(self, message, number=None, perfil=None):
+			if(perfil != None):
+				users = self.db.users.find({"perfil":perfil})
+			else:
+				users = self.db.users.find({"telefono":number})
+
+			self.messageToSend.append(message)
+			usersToSend = []
+			for user in users:
+				usersToSend.append(user['telegramId'])
+			self.number.append(usersToSend)
+			
+			try:
+				self.mutex.release()
+			except:
+				pass
+		
+		def sendMessage(self, message, phone):
+			print "sender sendMessage"
+			if(self.actm.teleBot != None):			
+				if(message != "photo"):
+					self.actm.tele.send_message(phone, message)
+				else:
+					self.actm.tele.send_photo(phone, open( './images/photo.jpg', 'rb'))			
+							
+
 			
 	def checkStatus(self, device):
 		if(device['Wifi']):
@@ -185,6 +246,16 @@ class action():
 		else:
 			return const.COMMAND_INVALID	
 
+	def checkIsAState(command, db):
+		checkState = ""
+		for msg in command:
+			checkState = chechState +  ' ' + msg
+		checkState = checkState[1:]
+		print "es estadodo?-" +checkState + "-"
+		state = db.states.find_one({"nombre":checkState})
+		return (state != None)
+
+
 			
 	def funcOn(self, command, db):
 		print "-- funcion On --"
@@ -198,8 +269,9 @@ class action():
 				print "estado: " + stateMsg
 				state = db.states.find_one({"nombre":stateMsg})
 				if(state != None):
-					print "A"
+					print state
 					for deviceState in state['dispositivos']:
+						print  deviceState
 						if(deviceState['id'] == const.DISP_ALARMA):
 							if (deviceState['estado'] == 0 and self.objMotionSensor.isRunning == True):
 								self.objMotionSensor.deactive()
@@ -208,7 +280,7 @@ class action():
 								self.objMotionSensor.active()
 								print "alarma activada"
 						else:
-							device = self.db.devices.find_one({"_id":deviceState['estado']})
+							device = self.db.devices.find_one({"_id":deviceState['id']})
 							if(device != None):
 								if(deviceState['estado'] == 1):
 									self.setOnDevice(device, db)
@@ -245,19 +317,19 @@ class action():
 						#averiguo si todos los dispositivos ya estan encendidos
 						lightsDeviceOff = db.devices.find({'tipo':'luz','idZona':command[2],'estado':0})
 						if (lightsDeviceOff == None):
-							return "Los dispositivios ya se encontraban encendidos"
+							return "Los dispositivos ya se encontraban encendidos"
 						#por el contrario enciendo el resto de dispositivos
 						else:
 							for deviceOff in lightsDeviceOff:
 								self.setOnDevice(deviceOff, db)
-								return "dispositivios encendidos"
+								return "dispositivos encendidos"
 					elif(command[1] == const.DISP_VENTILADOR):
 						device = db.devices.find_one({'tipo':command[1],'idZona':command[2]})		
 						if(device == None):
 							return const.DISP_INEXISTENTES
 						elif(self.checkStatus(device) == 0):
 							self.setOnDevice(device, db)
-							return "Ventildor encendido"
+							return "Ventilador encendido"
 						else:
 							return "El ventilador se encontraba encendido"
 					
@@ -272,66 +344,80 @@ class action():
 					return const.COMMAND_INVALID
 				#logica para comunicarse con la rasp y prender el dispositivo deseado
 				#comparar con el mapa de la casa
+		except ValueError as e:
+			pass
+			return const.COMMAND_INVALID
+		
 		except:
+			return const.COMMAND_INVALID
 			pass
 				
 		
 	def funcOff(self, command,db):
 		print "-- funcion Off --"
-		if(len(command) == 4):
-			print command[1] + " - " + command[2] + " - " + command[3]
-			device = db.devices.find_one({'tipo':command[1],'numero':int(command[2]),'idZona':command[3]})		
-			if(device == None):
-				return const.DISP_INEXISTENTES
-			elif(self.checkStatus(device) == 1):
-				self.setOffDevice(device, db)
-				return const.DISP_OFF
-			else:
-				return device['tipo'] + " - " + str(device['numero']) + ": se encontraba apagado"	
-		elif(len(command) == 3):
-			if(command[1] == const.DISP_SENSOR):
-				if(command[2] == const.DISP_LUZ):
-					if self.objLightSensor.isRunning == False:
-						self.objLightSensor.active()
-						return "Sensor de luz desactivado"
-					else:
-						return "Sensor de luz se encontraba desactivado"
-				else:
-					return const.DISP_INEXISTENTES
-			elif(command[1] == const.DISP_LUCES):
-				lightsDevice = db.devices.find({'tipo':'luz','idZona':command[2]})
-				if(lightsDevice == None):
-					return const.DISP_INEXISTENTES	
-				#averiguo si todos los dispositivos ya estan apagados
-				lightsDeviceOn = db.devices.find({'tipo':'luz','idZona':command[2],'estado':1})
-				if (lightsDeviceOn == None):
-					return "Los dispositivios ya se encontraban apagados"
-				#por el contrario enciendo el resto de dispositivos
-				else:
-					for deviceOn in lightsDeviceOn:
-						self.setOffDevice(deviceOn, db)
-					return "dispositivios apagados"					
-			elif(command[1] == const.DISP_VENTILADOR):
-				device = db.devices.find_one({'tipo':command[1],'idZona':command[2]})		
-				#print str(int(device['estado']))
+		try:
+			if(len(command) == 4):
+				print command[1] + " - " + command[2] + " - " + command[3]
+				device = db.devices.find_one({'tipo':command[1],'numero':int(command[2]),'idZona':command[3]})		
 				if(device == None):
-					print "Dispositivo no encontrado"
 					return const.DISP_INEXISTENTES
-					#(int(device['estado']) == 0) & --ESTO ESTABA EN EL IF
 				elif(self.checkStatus(device) == 1):
 					self.setOffDevice(device, db)
-					return "Ventiladdor apagado"
+					return const.DISP_OFF
 				else:
-					return "el Ventilador se encuentra apagado"	
-		elif(len(command) == 2):#comandos de dos terminos ej activar/encender alarma
-			if(command[1] == const.DISP_ALARMA):
-				if self.objMotionSensor.isRunning == True:
-					self.objMotionSensor.deactive()
-					return const.DISP_DESACTIVADO_ALARMA
-				else:
-					return "Alarma se encontraba desactivada"
-		else:
+					return device['tipo'] + " - " + str(device['numero']) + ": se encontraba apagado"	
+			elif(len(command) == 3):
+				if(command[1] == const.DISP_SENSOR):
+					if(command[2] == const.DISP_LUZ):
+						if self.objLightSensor.isRunning == True:
+							self.objLightSensor.deactive()
+							return "Sensor de luz desactivado"
+						else:
+							return "Sensor de luz se encontraba desactivado"
+					else:
+						return const.DISP_INEXISTENTES
+				elif(command[1] == const.DISP_LUCES):
+					lightsDevice = db.devices.find({'tipo':'luz','idZona':command[2]})
+					if(lightsDevice == None):
+						return const.DISP_INEXISTENTES	
+					#averiguo si todos los dispositivos ya estan apagados
+					lightsDeviceOn = db.devices.find({'tipo':'luz','idZona':command[2],'estado':1})
+					if (lightsDeviceOn == None):
+						return "Los dispositivos ya se encontraban apagados"
+					#por el contrario enciendo el resto de dispositivos
+					else:
+						for deviceOn in lightsDeviceOn:
+							self.setOffDevice(deviceOn, db)
+						return "dispositivos apagados"					
+				elif(command[1] == const.DISP_VENTILADOR):
+					device = db.devices.find_one({'tipo':command[1],'idZona':command[2]})		
+					#print str(int(device['estado']))
+					if(device == None):
+						print "Dispositivo no encontrado"
+						return const.DISP_INEXISTENTES
+						#(int(device['estado']) == 0) & --ESTO ESTABA EN EL IF
+					elif(self.checkStatus(device) == 1):
+						self.setOffDevice(device, db)
+						return "Ventilador apagado"
+					else:
+						return "el Ventilador se encuentra apagado"	
+			elif(len(command) == 2):#comandos de dos terminos ej activar/encender alarma
+				if(command[1] == const.DISP_ALARMA):
+					if self.objMotionSensor.isRunning == True:
+						self.objMotionSensor.deactive()
+						return const.DISP_DESACTIVADO_ALARMA
+					else:
+						return "Alarma se encontraba desactivada"
+			else:
+				return const.COMMAND_INVALID
+		except ValueError as e:
+			pass
 			return const.COMMAND_INVALID
+		
+		except:
+			pass
+			return const.COMMAND_INVALID
+								
 		#logica para comunicarse con la rasp y prender el dispositivo deseado
 		#comparar con el mapa de la casa
 
@@ -365,7 +451,7 @@ class action():
 							newLine = "\n"
 					return respuesta
 			elif(command[1] == const.DISP_VENTILADOR):
-				device = db.devices.find_one({'tipo':'ventilador','idZona':command[2]})
+				device = db.devices.find_one({'tipo':const.DISP_VENTILADOR,'idZona':command[2]})
 				#print str(int(device['estado']))
 				if(device == None):
 					print "Dispositivo no encontrado"
@@ -380,15 +466,25 @@ class action():
 					print "Dispositivo no configurado"
 					return const.DISP_INEXISTENTES
 				else:
-					return "Humedad en " + command[2] + ":  {0:0.1f} %".format(DHT.read_retry(22, int(device['pin']))[0]) #0-humedad, 1-temperatura								
+					if(DHT.read_retry(22, int(device['pin']))[0] != None):
+						return "Humedad en " + command[2] + ":  {0:0.1f} %".format(DHT.read_retry(22, int(device['pin']))[0]) #0-humedad, 1-temperatura								
+					else:
+						return "Problemas con el dispositivo de humedad, por favor verifique el mismo"
 			elif(command[1] == const.DISP_TEMPERATURA):
 				print "sensor temperatura"
 				device = db.devices.find_one({'tipo':'sensortemphum','idZona':command[2]})
 				if(device == None):
+					print "TEMP INEX"
 					print "Dispositivo no configurado"
 					return const.DISP_INEXISTENTES
 				else:
-					return "Temperatura en " + command[2] + ":  {0:0.1f} C".format(DHT.read_retry(22, int(device['pin']))[1]) #0-humedad, 1-temperatura						
+					print "TEMP"
+					if(DHT.read_retry(22, int(device['pin']))[1] != None):
+						return "Temperatura en " + command[2] + ":  {0:0.1f} C".format(DHT.read_retry(22, int(device['pin']))[1]) #0-humedad, 1-temperatura						
+					else:
+						return "Problemas con el dispositivo de temperatura, por favor verifique el mismo"
+					
+					
 		elif(len(command) == 2):#comandos de dos terminos ej activar/encender alarma
 			
 			if(command[1] == const.DISP_ALARMA):
@@ -405,7 +501,7 @@ class action():
 					respuesta = respuesta + newLine + device['tipo'] + " " + str(device['numero']) + " de " + device['idZona']  + " " + ("encendida" if self.checkStatus(device) else "apagada")
 					newLine = "\n"
 				
-				devices = db.devices.find({'tipo':'ventilador'})
+				devices = db.devices.find({'tipo':const.DISP_VENTILADOR})
 				for device in devices:
 					respuesta = respuesta + newLine + device['tipo'] + " " + str(device['numero']) + " de " + device['idZona']  + " " +  ("encendido" if self.checkStatus(device) else "apagado")
 					newLine = "\n"
@@ -422,8 +518,9 @@ class action():
 
 				devices = db.devices.find({'tipo':'sensortemphum'})
 				for device in devices:
-					respuesta = respuesta + "\nTemperatura en " + device['idZona'] + ":  {0:0.1f} C".format(DHT.read_retry(22, int(device['pin']))[1]) #0-humedad, 1-temperatura
-					respuesta = respuesta + "\nHumedad en " + device['idZona'] + ":  {0:0.1f} %".format(DHT.read_retry(22, int(device['pin']))[0]) #0-humedad, 1-temperatura
+					if(DHT.read_retry(22, int(device['pin']))[1] != None):
+						respuesta = respuesta + "\nTemperatura en " + device['idZona'] + ":  {0:0.1f} C".format(DHT.read_retry(22, int(device['pin']))[1]) #0-humedad, 1-temperatura
+						respuesta = respuesta + "\nHumedad en " + device['idZona'] + ":  {0:0.1f} %".format(DHT.read_retry(22, int(device['pin']))[0]) #0-humedad, 1-temperatura
 			
 				return respuesta
 				
@@ -435,10 +532,9 @@ class action():
 		#comparar con el mapa de la casa
 
 
-	def funPhoto(self, command,db):
+	def funPhoto(self, command, db):
 			#os.system('fswebcam -q -r 320x240 -S 3 --no-banner --jpeg 50 --save ./images/photo.jpg') # uses Fswebcam to take picture
-			os.system('LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libv4l/v4l1compat.so fswebcam -q -r 320x240 -S 3 --no-banner -F 10 --save ./images/photo.jpg')
-			print "Foto"
+			os.system('LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libv4l/v4l1compat.so fswebcam -q -r 320x240 --rotate 90 -S 3 --no-banner -F 10 --save ./images/photo.jpg')
 			return "photo"
 		
 	def funOpen(self, command,db):
@@ -478,6 +574,7 @@ class action():
 			
 
 	listCommand = {
+		'prender': funcOn,
 		'encender': funcOn,
 		'apagar': funcOff,
 		'activar': funcOn,

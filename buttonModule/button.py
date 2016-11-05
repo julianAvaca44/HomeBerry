@@ -26,8 +26,10 @@ def buttonHandle(db):
 
             state = GPIO.input(int(device['pin']))
             if(state == True):
+				#print 'apagar luz' + buttonPushed + ' zona ' + buttonPushedZone
 				commandList = ["apagar", "luz", str(buttonPushed), buttonPushedZone]
             else:
+				#print 'prender luz' + buttonPushed + ' zona ' + buttonPushedZone
 				commandList = ["encender", "luz", str(buttonPushed), buttonPushedZone]
             actm.acction(commandList)
             time.sleep(0.5)

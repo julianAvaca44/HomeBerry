@@ -39,7 +39,7 @@ class BotTelegram():
 						markup.hide_keyboard = True
 						result = self.db.users.update_one({"_id":user['_id']}, {"$set":{'telegramId':cid}})						
 
-						bot.send_message(cid, 'Telfono registrado', reply_markup=markup)
+						bot.send_message(cid, 'Teléfono registrado', reply_markup=markup)
 
 		bot.set_update_listener(listener) # Así, le decimos al bot que utilice como función escuchadora nuestra función ‘listener’ declarada arriba.
 
@@ -56,7 +56,8 @@ class BotTelegram():
 				msgCheckUserSession = sec.checkUserSession(user, msg, self.db)
 				if(msgCheckUserSession != 'OK'):
 					bot.send_message(cId, msgCheckUserSession)
-				else:				
+				else:		
+					msgToSend = ""
 					if msg:
 						#analizo, limpio y filtro los mensajes, parseo los msj a comandos
 						print(str(cId) + " : " + message.chat.first_name + " : " + msg)
@@ -64,20 +65,23 @@ class BotTelegram():
 						print("commads: ")
 						print(commands)
 						if(sec.checkUserProfileAcces(user, commands, self.db)):
-							message = self.actm.acction(commands)
+							msgToSend = self.actm.acction(commands)
 						else:
-							message = "Tenés un perfil restringido para realizar esta acción"
-						print message
-						bot.send_message(cId, message)
+							msgToSend = "Tenés un perfil restringido para realizar esta acción"
+						print msgToSend
+
 					else:
 						pass
 						#TODO:rechazar mensaje
 						#envio comando y reenvio respuesta al usuario
-						message = self.actm.acction(commands)
-						if(message == "photo"):
-							bot.send_photo(cId, open( './images/photo.jpg', 'rb'))
-						else:
-							bot.send_message(cId, message)               
+						msgToSend = self.actm.acction(commands)
+					
+					if(msgToSend == "photo"):
+						bot.send_photo(cId, open( './images/photo.jpg', 'rb'))
+					elif(msgToSend != None and msgToSend != ""):
+						bot.send_message(cId, msgToSend)
+					else:
+						bot.send_message(cId, const.COMMAND_INVALID)
 			else:
 				markup = types.ReplyKeyboardMarkup()
 				markup.one_time_keyboard = True

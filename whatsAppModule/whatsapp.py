@@ -37,7 +37,9 @@ class WhatsAppBot(object):
 		#Ver este numero 8
 		objListenerLayer = self.stack.getLayer(8)
 		objwhatsappListenerSender.objwhatsappListenerLayer = objListenerLayer
-		objListenerLayer.setAction(action.action(db, None))
+		objAction = action.action(db, None)
+		objAction.setWAListener(objwhatsappListenerSender)
+		objListenerLayer.setAction(objAction)
 		objListenerLayer.setDB(db)
 
 		#actm.waListener = objwhatsappListenerSender
@@ -191,7 +193,6 @@ class ListenerLayer(YowInterfaceLayer):
 
 	def prueba(self):
 		print "PRINT PRUEBA WA"
-		
 
 	def getDownloadableMediaMessageBody(self, message):
 		filename = "./audio/voice%s"%message.getExtension() 
@@ -208,21 +209,23 @@ class whatsappListenerSender (threading.Thread):
 		self.mutex.acquire()
 		self.start()
 		self.message = ""   
+		self.user = "" 
 		self.sendPhoto = False
 		objwhatsappListenerLayer = None  
 
 	def prueba(self, msg):
 		self.objwhatsappListenerLayer.messageSend("5491162737159", msg) 
+		
 	def run(self):
 		while True:
 			self.mutex.acquire()
-			#TODO: Quedo el grupo fijo, hay que ver si es un numero o sigue un grupo a definir
 			if(self.objwhatsappListenerLayer != None):
-				self.objwhatsappListenerLayer.messageSend("5491162737159-1467366059", self.message)
+				self.objwhatsappListenerLayer.messageSend(self.user, self.message)
 				if(self.sendPhoto):
-					self.objwhatsappListenerLayer.mediaSend("5491162737159-1467366059", "./images/photo.jpg")
+					self.objwhatsappListenerLayer.mediaSend(self.user, "./images/photo.jpg")
 	
-	def sendMessage(self, message, sendPhoto = False):
+	def sendMessage(self, user, message, sendPhoto = False):
 		self.mutex.release()		
 		self.message = message
+		self.user = user 
 		self.sendPhoto = sendPhoto
