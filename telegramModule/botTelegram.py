@@ -29,7 +29,7 @@ class BotTelegram():
 				if message.content_type == 'contact':
 					cid = message.chat.id # Almacenaremos el ID de la conversación.
 					phone_number = int(message.contact.phone_number)
-					user = sec.checkUser(phone_number)
+					user = sec.checkUser(phone_number, self.db)
 					print (phone_number)
 					print (user)
 					if user == None:

@@ -33,11 +33,11 @@ def main():
 			client = MongoClient()                        
 			db = client.homeBerryDB
 			threadWhatsApp = myThread(1, db)
-			#threadTelegram = myThread(2, db)
+			threadTelegram = myThread(2, db)
 			threadBoton = myThread(3, db)
 			setupGPIO(db)
 			threadWhatsApp.start()
-			#threadTelegram.start()
+			threadTelegram.start()
 			threadBoton.start()
 			while(True): time.sleep(1)
 

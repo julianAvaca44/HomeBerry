@@ -42,7 +42,7 @@ class action():
 			self.objMotionSensor = self.motionSensor(sensor['pin'], self.db, self, self.objSenderMessage)
 		sensor = self.db.devices.find_one({'tipo':'sensorluz'})
 		if (sensor != None):
-			self.objLightSensor = self.lightSensor(sensor['_id'], self.db, self)
+			self.objLightSensor = self.lightSensor(sensor['id'], self.db, self)
 		
 	
 	
@@ -140,7 +140,7 @@ class action():
 			self.isRunning = False
 			print ("Sensor de luz desactivado")
 		def checkLight(self):
-			sensor = self.db.devices.find_one({"_id":self.sensorId})
+			sensor = self.db.devices.find_one({"id":self.sensorId})
 			while self.isRunning:
 				time.sleep(2)
 				devicesToActivate = self.db.devices.find({"accionadoSensor":self.sensorId})
@@ -220,22 +220,22 @@ class action():
 			return GPIO.input(int(device['pin']))
 
 	def setOnDevice(self, device, db):
-		print 'setOn ' + device['_id'] + ' ' + device['nombre']
+		print 'setOn ' + ' ' + device['nombre']
 		if(device['Wifi']):
 			url = "http://" + device['nombreWifi'] + "/MODULO=ON"
 			urllib2.urlopen(url)
 		else:
 			GPIO.output(int(device['pin']), 1)
-		db.devices.update({"_id":device["_id"]}, {'$set':{'estado':1}})
+		db.devices.update({"id":device["id"]}, {'$set':{'estado':1}})
 
 	def setOffDevice(self, device, db):
-		print 'setOff ' + device['_id'] + ' ' + device['nombre']
+		print 'setOff ' + ' ' + device['nombre']
 		if(device['Wifi']):
 			url = "http://" + device['nombreWifi'] + "/MODULO=OFF"
 			urllib2.urlopen(url)
 		else:
 			GPIO.output(int(device['pin']), 0)
-		db.devices.update({"_id":device["_id"]}, {'$set':{'estado':0}})
+		db.devices.update({"id":device["id"]}, {'$set':{'estado':0}})
 
 
 	def acction(self, command):
@@ -270,19 +270,19 @@ class action():
 				state = db.states.find_one({"nombre":stateMsg})
 				if(state != None):
 					print state
-					for deviceState in state['dispositivos']:
+					for deviceState in state['configEstado']:
 						print  deviceState
-						if(deviceState['id'] == const.DISP_ALARMA):
-							if (deviceState['estado'] == 0 and self.objMotionSensor.isRunning == True):
+						if(deviceState['device'] == const.DISP_ALARMA):
+							if (deviceState['estado'] == False and self.objMotionSensor.isRunning == True):
 								self.objMotionSensor.deactive()
 								print "alarma desactivada"
-							elif (deviceState['estado'] == 1 and self.objMotionSensor.isRunning == False):
+							elif (deviceState['estado'] == True and self.objMotionSensor.isRunning == False):
 								self.objMotionSensor.active()
 								print "alarma activada"
 						else:
-							device = self.db.devices.find_one({"_id":deviceState['id']})
+							device = self.db.devices.find_one({"id":deviceState['device']})
 							if(device != None):
-								if(deviceState['estado'] == 1):
+								if(deviceState['estado'] == True):
 									self.setOnDevice(device, db)
 								else:
 									self.setOffDevice(device, db)
@@ -290,13 +290,17 @@ class action():
 				else:
 					return "Estado inexistente"
 			else:
+				
 				if(len(command) == 4):
+					
 					print command[1] + " - " + command[2] + " - " + command[3]
 					device = db.devices.find_one({'tipo':command[1],'numero':int(command[2]),'idZona':command[3]})		
 					if(device == None):
 						return const.DISP_INEXISTENTES
 					elif(self.checkStatus(device) == 0):
+						print "A"
 						self.setOnDevice(device, db)
+						print "B"
 						return const.DISP_ON
 					else:
 						return device['tipo'] + " - " + str(device['numero']) + ": se encontraba encendida"	

@@ -46,7 +46,7 @@ def checkUserSession(user, msg, db):
 			values = msg.split(";",1)
 			request = user['coordSolicitadas'].split(";",1)
 			print user['tc']
-			if(user[const.MONOGO_TARJETA_COORDENADAS]['values'][request[0]] == int(values[0]) and user[const.MONOGO_TARJETA_COORDENADAS]['values'][request[1]] == int(values[1])):
+			if(int(user[const.MONOGO_TARJETA_COORDENADAS]['values'][request[0]]) == int(values[0]) and int(user[const.MONOGO_TARJETA_COORDENADAS]['values'][request[1]]) == int(values[1])):
 				result = db.users.update_one({"_id":user['_id']}, {"$set":{'ultimaSolicitudCoordenadas':int(time.time()),
 																		   'coordSolicitadas':''}})
 				return 'Comprobación realizada correctamente. Ingrese comando'
