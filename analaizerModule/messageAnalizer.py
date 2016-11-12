@@ -32,6 +32,9 @@ def analizarMessage(message):
 		if(len(messaOut[x]) == 10 and messaOut[x][:8] == "habitaci"):
 			#print "ACENTO"
 			messaOut[x] = 'habitacion'
+		elif(len(messaOut[x]) == 6 and messaOut[x][:4] == "port"):
+			#print "ACENTO"
+			messaOut[x] = 'porton'
 
 	return messaOut
 

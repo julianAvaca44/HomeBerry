@@ -21,6 +21,7 @@ def checkUser(number, db):
 	print number
 	usr = db.users.find_one({const.MONOGO_TELEFONO:int(number)})
 	if usr == None:
+		print number
 		numberAux = number[:2] + "9" + number[2:]
 		usr = db.users.find_one({const.MONOGO_TELEFONO:int(numberAux)})
 		if usr == None:
@@ -177,3 +178,39 @@ def getNewCoordinatesCard(number, db):
 							  }
 		}})
 
+
+
+
+'''
+>>> import smtplib
+>>> from = "homeberry.ar@gmail.com
+  File "<stdin>", line 1
+    from = "homeberry.ar@gmail.com
+         ^
+SyntaxError: invalid syntax
+>>> from = "homeberry.ar@gmail.com"
+  File "<stdin>", line 1
+    from = "homeberry.ar@gmail.com"
+         ^
+SyntaxError: invalid syntax
+>>> from = "homeberry.ar@gmail.com"
+  File "<stdin>", line 1
+    from = "homeberry.ar@gmail.com"
+         ^
+SyntaxError: invalid syntax
+>>> fromad = "homeberry.ar@gmail.com"
+>>> toad = "jcescon@hotmail.com"
+>>> username = "homeberry.ar"
+>>> password = "proyecto2016"
+>>> server = smtplib.SMTP('smtp.gmail.com:587')
+>>> server.starttls()
+(220, '2.0.0 Ready to start TLS')
+>>> server.login(username, password)
+(235, '2.7.0 Accepted')
+>>> server.sendmail(fromad, toad, "prueba")
+{}
+>>> server.quit()
+(221, '2.0.0 closing connection w75sm8797070qkb.36 - gsmtp')
+
+
+'''

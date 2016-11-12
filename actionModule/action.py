@@ -75,33 +75,21 @@ class action():
 			buzzer = self.db.devices.find_one({"tipo":"buzzer"})
 			doorSensor = self.db.devices.find_one({"tipo":"sensorpuerta"})
 			pir = MotionSensor(int(self.pin))
+			i=10
 			while self.isRunning:
+				i = i - 1
 				time.sleep(1)
 				statusDoorSensor = False
-				print time.time()
 				if(doorSensor != None):
 					statusDoorSensor = self.actm.checkStatus(doorSensor)
-					print statusDoorSensor
-					#print "statusDoorSensor" + str(statusDoorSensor)
 				
+				#if pir.motion_detected or statusDoorSensor or not i:
 				if pir.motion_detected or statusDoorSensor:
 					self.actm.funPhoto(None, self.db)
 					print("Intruso detectado")
 					#if(self.actm.teleBot != None):
 					self.objSenderMessage.prepareMessage("Intruso detectado", None, "adulto")
 					self.objSenderMessage.prepareMessage("photo", None, "adulto")
-
-					'''
-					for user in users:
-						if(self.actm.waListener == None):
-							print("No tiene listener de WA")
-							try:
-								self.actm.waListener.sendMessage(user[const.MONOGO_TELEFONO], "Intruso detectado", True)	
-							except:
-								print("De verdad no tiene listener")
-						else:
-							self.actm.waListener.sendMessage(user[const.MONOGO_TELEFONO],"Intruso detectado", True)
-					'''
 					
 					timerBuzzer = 0
 					while self.isRunning and timerBuzzer < 300:
@@ -111,8 +99,7 @@ class action():
 							self.actm.setOffDevice(buzzer, self.db)
 							time.sleep(0.5)
 							timerBuzzer = timerBuzzer + 2
-							
-					#time.sleep(600)
+						time.sleep(3)
 					
 
 
@@ -162,7 +149,7 @@ class action():
 			threading.Thread.__init__(self)
 			#La siguiente linea hace que cuando se cierre un thread se cierren todos
 			self.messageToSend = []
-			self.number = []
+			self.user = []
 			self.daemon = True
 			self.db = db
 			self.actm = actm
@@ -176,10 +163,10 @@ class action():
 				print "A-Sender"
 				self.mutex.acquire()
 				while len(self.messageToSend) > 0:
-					while len(self.number[0]):
-						self.sendMessage(self.messageToSend[0],self.number[0][0])
-						self.number[0].pop(0)
-					self.number.pop(0)
+					while len(self.user[0]):
+						self.sendMessage(self.messageToSend[0],self.user[0][0])
+						self.user[0].pop(0)
+					self.user.pop(0)
 					self.messageToSend.pop(0)
 		
 		def prepareMessage(self, message, number=None, perfil=None):
@@ -191,21 +178,33 @@ class action():
 			self.messageToSend.append(message)
 			usersToSend = []
 			for user in users:
-				usersToSend.append(user['telegramId'])
-			self.number.append(usersToSend)
+				usersToSend.append(user)
+			self.user.append(usersToSend)
 			
 			try:
 				self.mutex.release()
 			except:
 				pass
 		
-		def sendMessage(self, message, phone):
+		def sendMessage(self, message, user):
 			print "sender sendMessage"
-			if(self.actm.teleBot != None):			
+			if(self.actm.teleBot != None and user['telegramId'] != 0):			
 				if(message != "photo"):
-					self.actm.tele.send_message(phone, message)
+					self.actm.tele.send_message(user['telegramId'], message)
 				else:
-					self.actm.tele.send_photo(phone, open( './images/photo.jpg', 'rb'))			
+					self.actm.tele.send_photo(user['telegramId'], open( './images/photo.jpg', 'rb'))		
+			
+			if(message != "photo"):
+				if(self.actm.waListener == None):
+					print("No tiene listener de WA")
+					try:
+						self.actm.waListener.sendMessage(user['telefono'], message, True)	
+						#self.actm.waListener.messageSend(str(int(user['telefono'])), message)
+					except:
+						print("De verdad no tiene listener")
+				else:
+					#self.actm.waListener.messageSend(str(int(user['telefono'])), message)
+					self.actm.waListener.sendMessage(user['telefono'], message, True)		
 							
 
 			
@@ -239,6 +238,9 @@ class action():
 
 
 	def acction(self, command):
+		if(self.checkIsAState(command, self.db)):
+			command.insert(0, "activar")
+			command.insert(1, "estado")
 		if command == None:
 			return const.COMMAND_UNRECOGNIZABLE	
 		elif command[0] in self.listCommand.keys(): 
@@ -246,15 +248,24 @@ class action():
 		else:
 			return const.COMMAND_INVALID	
 
-	def checkIsAState(command, db):
+	def checkIsAState(self, command, db):
 		checkState = ""
 		for msg in command:
-			checkState = chechState +  ' ' + msg
+			checkState = checkState +  ' ' + msg
 		checkState = checkState[1:]
-		print "es estadodo?-" +checkState + "-"
 		state = db.states.find_one({"nombre":checkState})
 		return (state != None)
 
+	def removeDe(self, command):
+		print command
+		i = 0
+		while (i < len(command)):
+			if(command[i] == "de"):
+				print "remove " +  command[i]
+				del command[i]
+			else: 
+				i = i + 1
+		return command
 
 			
 	def funcOn(self, command, db):
@@ -275,7 +286,7 @@ class action():
 						if(deviceState['device'] == const.DISP_ALARMA):
 							if (deviceState['estado'] == False and self.objMotionSensor.isRunning == True):
 								self.objMotionSensor.deactive()
-								print "alarma desactivada"
+								#print "alarma desactivada"
 							elif (deviceState['estado'] == True and self.objMotionSensor.isRunning == False):
 								self.objMotionSensor.active()
 								print "alarma activada"
@@ -291,6 +302,7 @@ class action():
 					return "Estado inexistente"
 			else:
 				
+				command = self.removeDe(command)
 				if(len(command) == 4):
 					
 					print command[1] + " - " + command[2] + " - " + command[3]
@@ -348,18 +360,27 @@ class action():
 					return const.COMMAND_INVALID
 				#logica para comunicarse con la rasp y prender el dispositivo deseado
 				#comparar con el mapa de la casa
+
 		except ValueError as e:
-			pass
+			'''
+			print "ERROR A"
+			print e
+			'''
 			return const.COMMAND_INVALID
+			pass
 		
 		except:
+			'''
+			print "ERROR B"
+			'''
 			return const.COMMAND_INVALID
 			pass
-				
+			
 		
 	def funcOff(self, command,db):
 		print "-- funcion Off --"
 		try:
+			command = self.removeDe(command)
 			if(len(command) == 4):
 				print command[1] + " - " + command[2] + " - " + command[3]
 				device = db.devices.find_one({'tipo':command[1],'numero':int(command[2]),'idZona':command[3]})		
@@ -407,6 +428,9 @@ class action():
 						return "el Ventilador se encuentra apagado"	
 			elif(len(command) == 2):#comandos de dos terminos ej activar/encender alarma
 				if(command[1] == const.DISP_ALARMA):
+					buzzer = self.db.devices.find_one({"tipo":"buzzer"})
+					self.setOffDevice(buzzer, db)
+
 					if self.objMotionSensor.isRunning == True:
 						self.objMotionSensor.deactive()
 						return const.DISP_DESACTIVADO_ALARMA
