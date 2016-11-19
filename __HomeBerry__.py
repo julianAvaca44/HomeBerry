@@ -61,7 +61,8 @@ def setupGPIO(db):
 		elif(device[const.MONOGO_TIPO].lower() == 'boton'):
 			GPIO.setup(int(device['pin']), GPIO.IN, GPIO.PUD_UP)
 		elif(device[const.MONOGO_TIPO].lower() == 'sensorluz' 
-		          or device[const.MONOGO_TIPO].lower() == 'sensorpuerta'):
+		          or device[const.MONOGO_TIPO].lower() == 'sensorpuerta'
+		          or device[const.MONOGO_TIPO].lower() == 'sensorcorriente'):
 			GPIO.setup(int(device['pin']), GPIO.IN)
 
 if __name__ == '__main__':

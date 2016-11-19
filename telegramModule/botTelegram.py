@@ -65,7 +65,7 @@ class BotTelegram():
 						print("commads: ")
 						print(commands)
 						if(sec.checkUserProfileAcces(user, commands, self.db)):
-							msgToSend = self.actm.acction(commands)
+							msgToSend = self.actm.acction(commands, user)
 						else:
 							msgToSend = "Tenés un perfil restringido para realizar esta acción"
 						print msgToSend
@@ -105,7 +105,10 @@ class BotTelegram():
 			wget.download(urlFileAudio, fileNameOutput)
 			messageText = am.convertSpeechToText(fileNameOutput)
 			commands = am.analizarMessage(messageText)
-			message = self.actm.acction(commands)
+
+			user = sec.checkUserTelegram(cId, self.db)
+			
+			message = self.actm.acction(commands, user)
 			bot.send_message(cId, message) 	
 
 		
@@ -120,7 +123,11 @@ class BotTelegram():
 
 
 def telegramBotRun(db):
-	bot = BotTelegram(db)
-	bot.run()
+	try:
+		while True:
+			bot = BotTelegram(db)
+			bot.run()
+	except:
+		pass
 	
 	

@@ -42,10 +42,10 @@ class WhatsAppBot(object):
 		objListenerLayer.setDB(db)
 
 		self.stack.broadcastEvent(YowLayerEvent(YowNetworkLayer.EVENT_STATE_CONNECT))
-		print "MANDANDO MENSAJE DE PRUEBA"
-		objwhatsappListenerSender.prueba("MSG PRUEBA")
+		#print "MANDANDO MENSAJE DE PRUEBA"
+		#objwhatsappListenerSender.prueba("MSG PRUEBA")
 
-		'''
+		
 		while True:
 				self.stack.loop()
 		'''
@@ -60,6 +60,7 @@ class WhatsAppBot(object):
 			except:				
 				print "ERROR WA"
 				pass
+		'''
 
 	def _getCredentials(self):
 		return const.TELEFONO, const.PASSWORD            
@@ -110,7 +111,7 @@ class ListenerLayer(YowInterfaceLayer):
 						'''
 						print("commads: ")
 						if(sec.checkUserProfileAcces(user, commands, self.db)):
-							message = self.actm.acction(commands)
+							message = self.actm.acction(commands, user)
 							if(message == "photo"):
 								self.mediaSend(messageProtocolEntity.getFrom(False), './images/photo.jpg', RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE)
 							else:
@@ -223,7 +224,7 @@ class ListenerLayer(YowInterfaceLayer):
 			
 		def run(self):
 			while True:
-				print "RUN WHASTAPP SENDER"
+				#print "RUN WHASTAPP SENDER"
 				self.mutex.acquire()
 				while len(self.messageToSend) > 0:
 					#self.sendMessage(self.messageToSend[0],self.user[0][0])

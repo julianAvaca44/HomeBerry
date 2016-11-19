@@ -4,6 +4,10 @@ from random import randint
 import time
 import re
 import constantes as const
+import smtplib
+
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 def checkUserProfileAcces(user, commands, db):
 	if(user['perfil'] == "adulto"):
@@ -41,6 +45,15 @@ def checkUserTelegram(telegramId, db):
 	return db.users.find_one({'telegramId':telegramId})
 	
 def checkUserSession(user, msg, db):
+
+	try:
+		if user['dniSolicitado'] == 0:
+			user['dniSolicitado'] == 0
+	except:
+		db.users.update({"numero":user["numero"]}, {'$set':{'dniSolicitado':0}})
+		user = db.users.find_one({"numero":user["numero"]})
+	
+	
 	if ((int(time.time()) - user['ultimaSolicitudCoordenadas']) > 86400):
 		regex = re.compile(r'[1-9][1-9](;)[1-9][1-9]')				
 		if(bool(regex.match(msg))):
@@ -58,21 +71,31 @@ def checkUserSession(user, msg, db):
 		else:
 			pos1 = chr(ord('A') + randint(0,8)) + str(randint(1,9))
 			pos2 = chr(ord('A') + randint(0,8)) + str(randint(1,9))
-			message_to_send = 'Indicar las posiciones ' + pos1 + ' y ' + pos2 + ' de la tarjeja te coordenadas separadas por ;'
+			message_to_send = 'Indicar las posiciones ' + pos1 + ' y ' + pos2 + ' de la tarjeta de coordenadas separadas por ;'
 			result = db.users.update_one({"_id":user['_id']}, {"$set":{'coordSolicitadas':pos1+';'+pos2}})
 			#print "Respuesta: " + str(user['tarjeta_coordenadas'][pos1]) + ';'+ user[pos2][request[0]]
 			return message_to_send
+	elif user['dniSolicitado'] == 1:
+			if msg == user['dni']:
+				sendNewTC(user, db)
+				db.users.update({"numero":user["numero"]}, {'$set':{'dniSolicitado':0}})
+				return "Tarjeta de coordenada generada y enviada por e-mail"			
+			elif msg.lower() == "cancelar":
+				db.users.update({"numero":user["numero"]}, {'$set':{'dniSolicitado':0}})
+				return "Solicitud cancelada"
+			else:
+				return "Datos incorrecto, por favor ingrese su DNI o envíe Cancelar"
 	else:
 		return 'OK'
 
-def getNewCoordinatesCard(number, db):
-	user = checkUser(number, db)
+def getNewCoordinatesCard(user, db):
 	if(user <> None):
 		coordinatesCard={'A1':0}
 		for i in range(1, 10):
 			for j in range(1, 10):
-				coordinatesCard[chr(ord('A') + i - 1) + str(j)] = randint(0,99)	
+				coordinatesCard[chr(ord('A') + i - 1) + str(j)] = randint(10,99)	
 
+		'''
 		print ('A1: %02d, A2: %02d, A3: %02d, A4: %02d, A5: %02d, A6: %02d, A7: %02d, A8: %02d, A9: %02d' % (coordinatesCard["A1"], coordinatesCard["A2"], coordinatesCard["A3"], coordinatesCard["A4"], coordinatesCard["A5"], coordinatesCard["A6"], coordinatesCard["A7"], coordinatesCard["A8"], coordinatesCard["A9"]))
 		print ('B1: %02d, B2: %02d, B3: %02d, B4: %02d, B5: %02d, B6: %02d, B7: %02d, B8: %02d, B9: %02d' % (coordinatesCard["B1"], coordinatesCard["B2"], coordinatesCard["B3"], coordinatesCard["B4"], coordinatesCard["B5"], coordinatesCard["B6"], coordinatesCard["B7"], coordinatesCard["B8"], coordinatesCard["B9"]))
 		print ('C1: %02d, C2: %02d, C3: %02d, C4: %02d, C5: %02d, C6: %02d, C7: %02d, C8: %02d, C9: %02d' % (coordinatesCard["C1"], coordinatesCard["C2"], coordinatesCard["C3"], coordinatesCard["C4"], coordinatesCard["C5"], coordinatesCard["C6"], coordinatesCard["C7"], coordinatesCard["C8"], coordinatesCard["C9"]))
@@ -82,10 +105,11 @@ def getNewCoordinatesCard(number, db):
 		print ('G1: %02d, G2: %02d, G3: %02d, G4: %02d, G5: %02d, G6: %02d, G7: %02d, G8: %02d, G9: %02d' % (coordinatesCard["G1"], coordinatesCard["G2"], coordinatesCard["G3"], coordinatesCard["G4"], coordinatesCard["G5"], coordinatesCard["G6"], coordinatesCard["G7"], coordinatesCard["G8"], coordinatesCard["G9"]))
 		print ('H1: %02d, H2: %02d, H3: %02d, H4: %02d, H5: %02d, H6: %02d, H7: %02d, H8: %02d, H9: %02d' % (coordinatesCard["H1"], coordinatesCard["H2"], coordinatesCard["H3"], coordinatesCard["H4"], coordinatesCard["H5"], coordinatesCard["H6"], coordinatesCard["H7"], coordinatesCard["H8"], coordinatesCard["H9"]))
 		print ('I1: %02d, I2: %02d, I3: %02d, I4: %02d, I5: %02d, I6: %02d, I7: %02d, I8: %02d, I9: %02d' % (coordinatesCard["I1"], coordinatesCard["I2"], coordinatesCard["I3"], coordinatesCard["I4"], coordinatesCard["I5"], coordinatesCard["I6"], coordinatesCard["I7"], coordinatesCard["I8"], coordinatesCard["I9"]))
-						
+		'''
+					
 		result = db.users.update_one({"_id":user['_id']},
 							 {"$set":
-							  {const.MONOGO_TARJETA_COORDENADAS .values:{
+							  {const.MONOGO_TARJETA_COORDENADAS:{"values":{
 								"A1":coordinatesCard["A1"],
 								"A2":coordinatesCard["A2"],
 								"A3":coordinatesCard["A3"],
@@ -175,42 +199,73 @@ def getNewCoordinatesCard(number, db):
 								"I7":coordinatesCard["I7"],
 								"I8":coordinatesCard["I8"],
 								"I9":coordinatesCard["I9"]                                  
-							  }
-		}})
+							  }}}})
 
 
 
+def sendNewTC(user, db):
+	getNewCoordinatesCard(user, db)
+	user = db.users.find_one({"_id":user['_id']})
+	message = templateMail(user)
+	sendMail(user, message)
+	
+	
+def sendMail(user, message):
+	
+	#print "ENVIO MAIL"
+	
+	username = const.MAIL_USERNAME
+	password = const.MAIL_PASSWORD
 
-'''
->>> import smtplib
->>> from = "homeberry.ar@gmail.com
-  File "<stdin>", line 1
-    from = "homeberry.ar@gmail.com
-         ^
-SyntaxError: invalid syntax
->>> from = "homeberry.ar@gmail.com"
-  File "<stdin>", line 1
-    from = "homeberry.ar@gmail.com"
-         ^
-SyntaxError: invalid syntax
->>> from = "homeberry.ar@gmail.com"
-  File "<stdin>", line 1
-    from = "homeberry.ar@gmail.com"
-         ^
-SyntaxError: invalid syntax
->>> fromad = "homeberry.ar@gmail.com"
->>> toad = "jcescon@hotmail.com"
->>> username = "homeberry.ar"
->>> password = "proyecto2016"
->>> server = smtplib.SMTP('smtp.gmail.com:587')
->>> server.starttls()
-(220, '2.0.0 Ready to start TLS')
->>> server.login(username, password)
-(235, '2.7.0 Accepted')
->>> server.sendmail(fromad, toad, "prueba")
-{}
->>> server.quit()
-(221, '2.0.0 closing connection w75sm8797070qkb.36 - gsmtp')
+	msg = MIMEMultipart('alternative')
+	msg['Subject'] = "Nueva tarjeta de coordenadas"
+	msg['From'] = const.MAIL
+	msg['To'] = user['mail']
+	
+	part = MIMEText(message, 'html')	
+	msg.attach(part)
+	
+	server = smtplib.SMTP('smtp.gmail.com:587')
+	server.starttls()
+	
+	server.login(username, password)
+
+	
+	#print message
+	server.sendmail(const.MAIL, user['mail'], msg.as_string())
+	server.quit()
+	
+	#print "FIN ENVIO MAIL -- " + user['mail']
 
 
-'''
+def templateMail(user):
+  #print "***------- TC -------****"
+  template = '<div><span><b>' + user['nombre'] + ' '+ user['apellido'] + ' tiene una nueva tarjeta de coordenadas: </b></span></div>'
+  tableTc = '<table style="border-collapse: collapse;"><thead><tr><td></td>'
+  tableHead = ''
+  for i in range(0,9):
+	  letra =  chr(ord('A') + i)
+	  tableHead += '<td>' + letra + '</td>'
+	  
+  tableTc +=tableHead+ '</tr></thead><tbody style="color:white;">'
+  tableRow = ''
+  
+  for j in range(1,10):
+        if(j%2 == 0):
+          tableRow +='<tr style="background-color:black;"><td style="background-color:white;color:black;border: 1px solid #438bca;">' + str(j) + '</td>'
+        else:
+          tableRow +='<tr style="background-color:#438bca;"><td style="background-color:white;color:black;border: 1px solid #438bca;">' + str(j) + '</td>'
+
+        #tableRow +='<tr><td>' + j + '</td>'
+        for i  in range(0,9):
+          letra = chr(ord('A') + i)
+          tableRow +='<td style="border: 1px solid #438bca;">' + str(user['tc']['values'][letra + str(j)]) + '</td>'
+        tableRow +='</tr>'
+    
+
+  template += tableTc + tableRow + '</tbody></table>'   
+  #print "***------- FIN TC -------****"
+  
+  return template;
+
+
